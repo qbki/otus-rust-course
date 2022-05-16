@@ -1,12 +1,12 @@
+pub mod sensors;
 pub mod smart_outlet;
 pub mod smart_thermometer;
-pub mod sensors;
 
-use std::thread::sleep;
-use std::time::Duration;
+use sensors::{MockedSensor, Sensor};
 use smart_outlet::SmartOutlet;
 use smart_thermometer::SmartThermometer;
-use sensors::{MockedSensor, Sensor};
+use std::thread::sleep;
+use std::time::Duration;
 
 fn main() {
     let mut outlet = SmartOutlet::new(String::from("Kitchen"));
@@ -28,7 +28,11 @@ fn main() {
         print!("\x1B[2J"); // clear screen
         print!("\x1B[H"); // move cursor to (0, 0)
         println!("{}, {:#?}", outlet.description(), outlet.power_state());
-        println!("{}, {}", termometer.description(), termometer.get_temperature());
+        println!(
+            "{}, {}",
+            termometer.description(),
+            termometer.get_temperature()
+        );
 
         sleep(sleep_duration);
     }

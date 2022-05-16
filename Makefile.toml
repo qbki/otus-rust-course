@@ -12,3 +12,6 @@ args = ["clippy", "--", "-D", "warnings"]
 
 [tasks.checks]
 run_task = { name = ["lint", "check-formatting"] }   
+
+[env]
+CARGO_MAKE_EXTEND_WORKSPACE_MAKEFILE = true

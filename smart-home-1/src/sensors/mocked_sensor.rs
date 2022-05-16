@@ -27,7 +27,8 @@ impl<T> MockedSensor<T> {
 }
 
 impl<T> Sensor<T> for MockedSensor<T>
-    where T : Copy
+where
+    T: Copy,
 {
     fn sample(&self) -> T {
         let index = self.index.get();

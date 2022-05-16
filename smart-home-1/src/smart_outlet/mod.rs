@@ -15,7 +15,7 @@ impl SmartOutlet {
         Self {
             description,
             power_state: SwitchStateEnum::Off,
-            last_power_consumption_mesurement: 0.0
+            last_power_consumption_mesurement: 0.0,
         }
     }
 
