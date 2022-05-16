@@ -9,7 +9,7 @@ pub struct MockedSensor<T> {
 
 impl<T> MockedSensor<T> {
     pub fn new(data: Vec<T>) -> Self {
-        assert_eq!(data.len() > 0, true);
+        assert!(!data.is_empty());
         Self {
             data,
             index: Cell::new(0),

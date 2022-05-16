@@ -6,8 +6,7 @@ use std::thread::sleep;
 use std::time::Duration;
 use smart_outlet::SmartOutlet;
 use smart_thermometer::SmartThermometer;
-use sensors::MockedSensor;
-use sensors::Sensor;
+use sensors::{MockedSensor, Sensor};
 
 fn main() {
     let mut outlet = SmartOutlet::new(String::from("Kitchen"));
