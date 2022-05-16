@@ -5,3 +5,7 @@ version = 3
 [[package]]
 name = "fizzbuzz"
 version = "0.1.0"
+
+[[package]]
+name = "smart-home-1"
+version = "0.1.0"
