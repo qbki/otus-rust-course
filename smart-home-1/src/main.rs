@@ -1,7 +1,7 @@
-pub mod common;
-pub mod sensors;
-pub mod smart_outlet;
-pub mod smart_thermometer;
+mod common;
+mod sensors;
+mod smart_outlet;
+mod smart_thermometer;
 
 use common::SwitchStatusEnum;
 use sensors::{MockedSensor, Sensor};
