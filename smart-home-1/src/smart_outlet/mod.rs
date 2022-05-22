@@ -23,7 +23,8 @@ impl SmartOutlet {
     }
 
     pub fn get_power_state(&self) -> SwitchStatusEnum {
-        self.power_state }
+        self.power_state
+    }
 
     pub fn description(&self) -> &str {
         &self.description

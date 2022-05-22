@@ -3,12 +3,12 @@ pub mod sensors;
 pub mod smart_outlet;
 pub mod smart_thermometer;
 
-use std::thread::sleep;
-use std::time::Duration;
-use sensors::{MockedSensor, Sensor};
 use common::SwitchStatusEnum;
+use sensors::{MockedSensor, Sensor};
 use smart_outlet::SmartOutlet;
 use smart_thermometer::SmartThermometer;
+use std::thread::sleep;
+use std::time::Duration;
 
 fn main() {
     let mut outlet = SmartOutlet::new(String::from("Kitchen"));
@@ -26,10 +26,14 @@ fn main() {
     let sleep_duration = Duration::from_millis(1000);
     loop {
         let switch_state = mocked_switch_state.sample();
-        let (amperage, voltage) =
-            if let SwitchStatusEnum::On = switch_state
-                { (mocked_amperage_sensor.sample(), mocked_voltage_sensor.sample()) }
-                else { (0.0, 0.0) };
+        let (amperage, voltage) = if let SwitchStatusEnum::On = switch_state {
+            (
+                mocked_amperage_sensor.sample(),
+                mocked_voltage_sensor.sample(),
+            )
+        } else {
+            (0.0, 0.0)
+        };
         let temperature = mocked_temperature_sensor.sample();
 
         outlet.set_power_consumption(voltage, amperage);

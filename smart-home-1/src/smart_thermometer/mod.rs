@@ -32,8 +32,7 @@ impl fmt::Display for SmartThermometer {
         write!(
             f,
             "Thermometer: {}\n    temperature: {:.1}°C",
-            self.description,
-            self.last_temperature_mesurement,
+            self.description, self.last_temperature_mesurement,
         )
     }
 }
