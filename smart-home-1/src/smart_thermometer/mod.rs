@@ -1,5 +1,8 @@
+use std::fmt;
+
 pub struct SmartThermometer {
     description: String,
+    /// Temperature in Celsius (°C)
     last_temperature_mesurement: f64,
 }
 
@@ -21,5 +24,16 @@ impl SmartThermometer {
 
     pub fn set_temperature(&mut self, temperature: f64) {
         self.last_temperature_mesurement = temperature;
+    }
+}
+
+impl fmt::Display for SmartThermometer {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "Thermometer: {}\n    temperature: {:.1}°C",
+            self.description,
+            self.last_temperature_mesurement,
+        )
     }
 }
