@@ -14,7 +14,7 @@ impl SmartThermometer {
         }
     }
 
-    pub fn description(&self) -> &str {
+    pub fn get_description(&self) -> &str {
         &self.description
     }
 
@@ -32,7 +32,8 @@ impl fmt::Display for SmartThermometer {
         write!(
             f,
             "Thermometer: {}\n    temperature: {:.1}°C",
-            self.description, self.last_temperature_mesurement,
+            self.get_description(),
+            self.get_temperature(),
         )
     }
 }

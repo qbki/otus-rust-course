@@ -26,7 +26,7 @@ impl SmartOutlet {
         self.power_state
     }
 
-    pub fn description(&self) -> &str {
+    pub fn get_description(&self) -> &str {
         &self.description
     }
 
@@ -44,9 +44,9 @@ impl fmt::Display for SmartOutlet {
         write!(
             f,
             "Outlet: {}\n    power: {}\n    consumptin: {:.1}kW",
-            self.description,
-            self.power_state,
-            self.last_power_consumption_mesurement * 0.001,
+            self.get_description(),
+            self.get_power_state(),
+            self.get_power_units() * 0.001,
         )
     }
 }
