@@ -1,4 +1,4 @@
-use crate::common::{Device, Print, SwitchStatusEnum, PRINT_OFFSET};
+use crate::common::{Device, SwitchStatusEnum, PRINT_OFFSET};
 use crate::sensors::Sensor;
 
 pub struct SmartOutlet {
@@ -32,31 +32,16 @@ impl SmartOutlet {
     }
 }
 
-impl Print for SmartOutlet {
-    fn print(&self, depth: usize) {
-        let offset = PRINT_OFFSET.repeat(depth);
-        let sub_offset = PRINT_OFFSET.repeat(depth + 1);
-
-        println!("{}Outlet: {}", offset, self.name);
-        println!("{}power: {}", sub_offset, self.get_power_state());
-        println!(
-            "{}consumption: {:.1}kW",
-            sub_offset,
-            self.get_power_units() * 0.001
-        );
-    }
-}
-
 impl Device for SmartOutlet {
     fn get_name(&self) -> &str {
         &self.name
     }
 
-    fn report(&self) -> String {
-        let mut result = String::new();
-        result.push_str(format!("Outlet name: {}\n", self.name).as_str());
-        result.push_str(format!("power: {}\n", self.get_power_state()).as_str());
-        result.push_str(format!("consumption: {}", self.get_power_units()).as_str());
-        result
+    fn report(&self) -> Vec<String> {
+        vec![
+            format!("Outlet: {}", self.name),
+            format!("{}power: {}", PRINT_OFFSET, self.get_power_state()),
+            format!("{}consumption: {}kW", PRINT_OFFSET, self.get_power_units() * 0.001),
+        ]
     }
 }

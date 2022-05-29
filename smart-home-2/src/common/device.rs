@@ -1,6 +1,4 @@
-use super::print::Print;
-
-pub trait Device: Print {
+pub trait Device {
     fn get_name(&self) -> &str;
-    fn report(&self) -> String;
+    fn report(&self) -> Vec<String>;
 }

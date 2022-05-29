@@ -4,7 +4,7 @@ mod smart_home;
 mod smart_outlet;
 mod smart_thermometer;
 
-use common::{report, Print, SwitchStatusEnum};
+use common::{report, SwitchStatusEnum};
 use sensors::MockedSensor;
 use smart_home::SmartHome;
 use smart_outlet::SmartOutlet;
@@ -69,7 +69,7 @@ fn main() {
         print!("\x1B[H"); // move cursor to (0, 0)
 
         println!("*** Report ***");
-        home.print(1);
+        home.print();
         println!();
 
         println!("*** List of Rooms ***");

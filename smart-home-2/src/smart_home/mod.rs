@@ -1,6 +1,6 @@
 mod rooms;
 
-use crate::common::{Device, Print, Report, PRINT_OFFSET};
+use crate::common::{Device, Report, PRINT_OFFSET};
 use rooms::Room;
 use std::collections::HashMap;
 
@@ -39,22 +39,32 @@ impl SmartHome {
     pub fn get_devices_from(&self, room_name: &str) -> Option<Vec<&dyn Device>> {
         self.rooms.get(room_name).map(|room| room.get_devices())
     }
-}
 
-impl Print for SmartHome {
-    fn print(&self, depth: usize) {
-        println!("{}Smart home: {}", PRINT_OFFSET.repeat(depth), self.name);
+    pub fn print(&self) {
+        let room_offset = PRINT_OFFSET.repeat(1);
+        let device_offset = PRINT_OFFSET.repeat(2);
 
-        let mut rooms = self.get_rooms();
+        println!("Home: {}", self.name);
+
+        let mut rooms = Vec::from_iter(self.rooms.values());
         rooms.sort_by(|a, b| a.get_name().cmp(b.get_name()));
+
         for room in rooms {
-            room.print(depth + 1);
+            println!("{}Room: {}", room_offset, room.get_name());
+
+            let mut devices = room.get_devices();
+            devices.sort_by(|a, b| a.get_name().cmp(b.get_name()));
+
+            devices.into_iter()
+                .map(|device| device.report())
+                .flatten()
+                .for_each(|message| println!("{}{}", device_offset, message));
         }
     }
 }
 
 impl Report for SmartHome {
-    fn report(&self, room_name: &str, device_name: &str) -> Option<String> {
+    fn report(&self, room_name: &str, device_name: &str) -> Option<Vec<String>> {
         self.rooms
             .get(room_name)
             .and_then(|room| room.get_device(device_name))

@@ -1,4 +1,4 @@
-use crate::common::{Device, Print, PRINT_OFFSET};
+use crate::common::{Device, PRINT_OFFSET};
 use crate::sensors::Sensor;
 
 pub struct SmartThermometer {
@@ -19,25 +19,15 @@ impl SmartThermometer {
     }
 }
 
-impl Print for SmartThermometer {
-    fn print(&self, depth: usize) {
-        let offset = PRINT_OFFSET.repeat(depth);
-        let sub_offset = PRINT_OFFSET.repeat(depth + 1);
-
-        println!("{}Thermometer: {}", offset, self.name);
-        println!("{}temperature: {:.1}°C", sub_offset, self.get_temperature());
-    }
-}
-
 impl Device for SmartThermometer {
     fn get_name(&self) -> &str {
         &self.name
     }
 
-    fn report(&self) -> String {
-        let mut result = String::new();
-        result.push_str(format!("Thermometer name: {}\n", self.name).as_str());
-        result.push_str(format!("temperature: {:.1}°C", self.get_temperature()).as_str());
-        result
+    fn report(&self) -> Vec<String> {
+        vec![
+            format!("Thermometer: {}", self.name),
+            format!("{}temperature: {:.1}°C", PRINT_OFFSET, self.get_temperature()),
+        ]
     }
 }

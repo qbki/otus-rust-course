@@ -1,4 +1,4 @@
-use crate::common::{Device, Print, PRINT_OFFSET};
+use crate::common::Device;
 use std::collections::HashMap;
 
 pub struct Room {
@@ -31,17 +31,5 @@ impl Room {
             .values()
             .map(|device| device.as_ref())
             .collect()
-    }
-}
-
-impl Print for Room {
-    fn print(&self, depth: usize) {
-        println!("{}Room: {}", PRINT_OFFSET.repeat(depth), self.name);
-
-        let mut devices = self.get_devices();
-        devices.sort_by(|a, b| a.get_name().cmp(b.get_name()));
-        for device in devices {
-            device.print(depth + 1);
-        }
     }
 }
