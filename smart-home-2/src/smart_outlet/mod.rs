@@ -39,12 +39,20 @@ impl Print for SmartOutlet {
 
         println!("{}Outlet: {}", offset, self.name);
         println!("{}power: {}", sub_offset, self.get_power_state());
-        println!("{}consumptin: {:.1}kW", sub_offset, self.get_power_units() * 0.001);
+        println!("{}consumption: {:.1}kW", sub_offset, self.get_power_units() * 0.001);
     }
 }
 
 impl Device for SmartOutlet {
     fn get_name(&self) -> &str {
         &self.name
+    }
+
+    fn report(&self) -> String {
+        let mut result = String::new();
+        result.push_str(format!("Outlet name: {}\n", self.name).as_str());
+        result.push_str(format!("power: {}\n", self.get_power_state()).as_str());
+        result.push_str(format!("consumption: {}", self.get_power_units()).as_str());
+        result
     }
 }

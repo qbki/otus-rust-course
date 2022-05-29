@@ -2,7 +2,7 @@ mod rooms;
 
 use std::collections::HashMap;
 use rooms::Room;
-use crate::common::{Device, Print, PRINT_OFFSET};
+use crate::common::{Device, Print, Report, PRINT_OFFSET};
 
 pub struct SmartHome {
     name: String,
@@ -37,6 +37,13 @@ impl SmartHome {
     pub fn get_rooms(&self) -> Vec<&Box<Room>> {
         self.rooms.values().collect()
     }
+
+    pub fn get_devices_from(&self, room_name: &str) -> Option<Vec<&Box<dyn Device>>> {
+        match self.rooms.get(room_name) {
+            Some(room) => Some(room.get_devices()),
+            None => None,
+        }
+    }
 }
 
 impl Print for SmartHome {
@@ -48,5 +55,14 @@ impl Print for SmartHome {
         for room in rooms {
             room.print(depth + 1);
         }
+    }
+}
+
+impl Report for SmartHome {
+    fn report(&self, room_name: &str, device_name: &str) -> Option<String> {
+        self.rooms
+            .get(room_name)
+            .and_then(|room| room.get_device(device_name))
+            .and_then(|device| Some(device.report()))
     }
 }

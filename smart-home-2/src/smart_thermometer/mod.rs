@@ -33,4 +33,11 @@ impl Device for SmartThermometer {
     fn get_name(&self) -> &str {
         &self.name
     }
+
+    fn report(&self) -> String {
+        let mut result = String::new();
+        result.push_str(format!("Thermometer name: {}\n", self.name).as_str());
+        result.push_str(format!("temperature: {:.1}°C", self.get_temperature()).as_str());
+        result
+    }
 }

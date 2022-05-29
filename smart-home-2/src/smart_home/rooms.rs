@@ -25,6 +25,10 @@ impl Room {
         );
     }
 
+    pub fn get_device(&self, device_name: &str) -> Option<&Box<dyn Device>> {
+        self.devices.get(device_name)
+    }
+
     pub fn get_devices(&self) -> Vec<&Box<dyn Device>> {
         self.devices.values().collect()
     }

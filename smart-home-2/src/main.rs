@@ -4,13 +4,17 @@ mod smart_home;
 mod smart_outlet;
 mod smart_thermometer;
 
-use common::{Print, SwitchStatusEnum};
+use common::{report, Print, SwitchStatusEnum};
 use sensors::MockedSensor;
 use smart_outlet::SmartOutlet;
 use smart_home::SmartHome;
 use smart_thermometer::SmartThermometer;
 use std::thread::sleep;
 use std::time::Duration;
+
+const KITCHEN: &str = "Kitchen";
+const LIVING_ROOM: &str = "Living room";
+const BASEMENT: &str = "Deep scary basement";
 
 fn main() {
     let fridge_outlet = SmartOutlet::new(
@@ -42,17 +46,44 @@ fn main() {
     );
 
     let mut home = SmartHome::new("Home, sweet home");
-    home.add_device("Kitchen", Box::new(fridge_outlet));
-    home.add_device("Living room", Box::new(inside_thermometer));
-    home.add_device("Living room", Box::new(outside_thermometer));
-    home.add_device("Deep scary basement", Box::new(unknown_outlet));
-    home.add_device("Deep scary basement", Box::new(unknown_thermometer));
+    home.add_device(KITCHEN, Box::new(fridge_outlet));
+    home.add_device(LIVING_ROOM, Box::new(inside_thermometer));
+    home.add_device(LIVING_ROOM, Box::new(outside_thermometer));
+    home.add_device(BASEMENT, Box::new(unknown_outlet));
+    home.add_device(BASEMENT, Box::new(unknown_thermometer));
+
+
+    let mut saved_for_report = String::new();
+    saved_for_report.push_str(report(&home, BASEMENT, "Unknown thermometer").as_str());
+    saved_for_report.push_str("\n\n");
+    saved_for_report.push_str(report(&home, BASEMENT, "WRONG_DEVICE_NAME").as_str());
 
     let sleep_duration = Duration::from_millis(1000);
     loop {
         print!("\x1B[2J"); // clear screen
         print!("\x1B[H"); // move cursor to (0, 0)
-        home.print(0);
+
+        println!("*** Report ***");
+        home.print(1);
+        println!("");
+
+        println!("*** List of Rooms ***");
+        for room in home.get_rooms() {
+            println!("{}", room.get_name());
+        }
+        println!("");
+
+        println!("*** List of devices from \"{}\"***", BASEMENT);
+        if let Some(devices) = home.get_devices_from(BASEMENT) {
+            for device in devices {
+                println!("{}", device.get_name());
+            }
+        }
+        println!("");
+
+        println!("*** Please copy and paste it into a weakly report ***");
+        println!("{}", saved_for_report);
+
         sleep(sleep_duration);
     }
 }
