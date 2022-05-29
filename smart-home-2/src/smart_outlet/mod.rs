@@ -1,4 +1,4 @@
-use crate::common::{Device, SwitchStatusEnum, Print, PRINT_OFFSET};
+use crate::common::{Device, Print, SwitchStatusEnum, PRINT_OFFSET};
 use crate::sensors::Sensor;
 
 pub struct SmartOutlet {
@@ -39,7 +39,11 @@ impl Print for SmartOutlet {
 
         println!("{}Outlet: {}", offset, self.name);
         println!("{}power: {}", sub_offset, self.get_power_state());
-        println!("{}consumption: {:.1}kW", sub_offset, self.get_power_units() * 0.001);
+        println!(
+            "{}consumption: {:.1}kW",
+            sub_offset,
+            self.get_power_units() * 0.001
+        );
     }
 }
 

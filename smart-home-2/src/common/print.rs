@@ -1,4 +1,4 @@
-pub const PRINT_OFFSET: &'static str  = "    ";
+pub const PRINT_OFFSET: &str = "    ";
 
 pub trait Print {
     fn print(&self, depth: usize);

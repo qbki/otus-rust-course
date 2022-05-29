@@ -6,8 +6,8 @@ mod smart_thermometer;
 
 use common::{report, Print, SwitchStatusEnum};
 use sensors::MockedSensor;
-use smart_outlet::SmartOutlet;
 use smart_home::SmartHome;
+use smart_outlet::SmartOutlet;
 use smart_thermometer::SmartThermometer;
 use std::thread::sleep;
 use std::time::Duration;
@@ -21,28 +21,34 @@ fn main() {
         String::from("Fridge"),
         Box::new(MockedSensor::new(vec![1000.0, 0.0, 3000.0])),
         Box::new(MockedSensor::new(vec![4000.0, 0.0, 6000.0])),
-        Box::new(MockedSensor::new(vec![SwitchStatusEnum::On, SwitchStatusEnum::Off, SwitchStatusEnum::On])),
+        Box::new(MockedSensor::new(vec![
+            SwitchStatusEnum::On,
+            SwitchStatusEnum::Off,
+            SwitchStatusEnum::On,
+        ])),
     );
     let unknown_outlet = SmartOutlet::new(
         String::from("Unknown outlet"),
         Box::new(MockedSensor::new(vec![0.0, 0.0, 0.0, 300.0])),
         Box::new(MockedSensor::new(vec![0.0, 0.0, 0.0, 600.0])),
         Box::new(MockedSensor::new(vec![
-                SwitchStatusEnum::Off, SwitchStatusEnum::Off,
-                SwitchStatusEnum::Off, SwitchStatusEnum::On,
+            SwitchStatusEnum::Off,
+            SwitchStatusEnum::Off,
+            SwitchStatusEnum::Off,
+            SwitchStatusEnum::On,
         ])),
     );
     let unknown_thermometer = SmartThermometer::new(
         String::from("Unknown thermometer"),
-        Box::new(MockedSensor::new(vec![4.0, 5.0, 4.5, -1.0]))
+        Box::new(MockedSensor::new(vec![4.0, 5.0, 4.5, -1.0])),
     );
     let outside_thermometer = SmartThermometer::new(
         String::from("Outside"),
-        Box::new(MockedSensor::new(vec![-5.0, -1.0, 0.0]))
+        Box::new(MockedSensor::new(vec![-5.0, -1.0, 0.0])),
     );
     let inside_thermometer = SmartThermometer::new(
         String::from("Inside"),
-        Box::new(MockedSensor::new(vec![23.0, 24.0, 25.0]))
+        Box::new(MockedSensor::new(vec![23.0, 24.0, 25.0])),
     );
 
     let mut home = SmartHome::new("Home, sweet home");
@@ -51,7 +57,6 @@ fn main() {
     home.add_device(LIVING_ROOM, Box::new(outside_thermometer));
     home.add_device(BASEMENT, Box::new(unknown_outlet));
     home.add_device(BASEMENT, Box::new(unknown_thermometer));
-
 
     let mut saved_for_report = String::new();
     saved_for_report.push_str(report(&home, BASEMENT, "Unknown thermometer").as_str());
@@ -65,13 +70,13 @@ fn main() {
 
         println!("*** Report ***");
         home.print(1);
-        println!("");
+        println!();
 
         println!("*** List of Rooms ***");
         for room in home.get_rooms() {
             println!("{}", room.get_name());
         }
-        println!("");
+        println!();
 
         println!("*** List of devices from \"{}\"***", BASEMENT);
         if let Some(devices) = home.get_devices_from(BASEMENT) {
@@ -79,7 +84,7 @@ fn main() {
                 println!("{}", device.get_name());
             }
         }
-        println!("");
+        println!();
 
         println!("*** Please copy and paste it into a weakly report ***");
         println!("{}", saved_for_report);
