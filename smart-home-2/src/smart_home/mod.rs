@@ -41,7 +41,7 @@ impl SmartHome {
     }
 
     pub fn print(&self) {
-        let room_offset = PRINT_OFFSET.repeat(1);
+        let room_offset = PRINT_OFFSET;
         let device_offset = PRINT_OFFSET.repeat(2);
 
         println!("Home: {}", self.name);
@@ -55,9 +55,9 @@ impl SmartHome {
             let mut devices = room.get_devices();
             devices.sort_by(|a, b| a.get_name().cmp(b.get_name()));
 
-            devices.into_iter()
-                .map(|device| device.report())
-                .flatten()
+            devices
+                .into_iter()
+                .flat_map(|device| device.report())
                 .for_each(|message| println!("{}{}", device_offset, message));
         }
     }

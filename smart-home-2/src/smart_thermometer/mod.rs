@@ -27,7 +27,11 @@ impl Device for SmartThermometer {
     fn report(&self) -> Vec<String> {
         vec![
             format!("Thermometer: {}", self.name),
-            format!("{}temperature: {:.1}°C", PRINT_OFFSET, self.get_temperature()),
+            format!(
+                "{}temperature: {:.1}°C",
+                PRINT_OFFSET,
+                self.get_temperature()
+            ),
         ]
     }
 }

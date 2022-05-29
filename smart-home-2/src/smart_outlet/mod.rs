@@ -41,7 +41,11 @@ impl Device for SmartOutlet {
         vec![
             format!("Outlet: {}", self.name),
             format!("{}power: {}", PRINT_OFFSET, self.get_power_state()),
-            format!("{}consumption: {}kW", PRINT_OFFSET, self.get_power_units() * 0.001),
+            format!(
+                "{}consumption: {}kW",
+                PRINT_OFFSET,
+                self.get_power_units() * 0.001
+            ),
         ]
     }
 }
