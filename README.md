@@ -40,3 +40,45 @@ Outlet: Kitchen
 Thermometer: Outside
     temperature: 23.0°C
 ```
+
+
+## [smart-home-2](./smart-home-2/)
+
+A basic implementation of Smart Home infrastructure.
+
+Output:
+
+```
+*** Report ***
+    Smart home: Home, sweet home
+        Room: Deep scary basement
+            Outlet: Unknown outlet
+                power: Off
+                consumption: 0.0kW
+            Thermometer: Unknown thermometer
+                temperature: 5.0°C
+        Room: Kitchen
+            Outlet: Fridge
+                power: On
+                consumption: 4000.0kW
+        Room: Living room
+            Thermometer: Inside
+                temperature: 23.0°C
+            Thermometer: Outside
+                temperature: -5.0°C
+
+*** List of Rooms ***
+Living room
+Deep scary basement
+Kitchen
+
+*** List of devices from "Deep scary basement"***
+Unknown outlet
+Unknown thermometer
+
+*** Please copy and paste it into a weakly report ***
+Thermometer name: Unknown thermometer
+temperature: 4.0°C
+
+Device was not found
+```
