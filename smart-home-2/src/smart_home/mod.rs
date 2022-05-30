@@ -40,17 +40,18 @@ impl SmartHome {
         self.rooms.get(room_name).map(|room| room.get_devices())
     }
 
-    pub fn print(&self) {
+    pub fn full_report(&self) -> Vec<String> {
+        let mut result = Vec::new();
         let room_offset = PRINT_OFFSET;
         let device_offset = PRINT_OFFSET.repeat(2);
 
-        println!("Home: {}", self.name);
+        result.push(format!("Home: {}", self.name));
 
         let mut rooms = Vec::from_iter(self.rooms.values());
         rooms.sort_by(|a, b| a.get_name().cmp(b.get_name()));
 
         for room in rooms {
-            println!("{}Room: {}", room_offset, room.get_name());
+            result.push(format!("{}Room: {}", room_offset, room.get_name()));
 
             let mut devices = room.get_devices();
             devices.sort_by(|a, b| a.get_name().cmp(b.get_name()));
@@ -58,8 +59,12 @@ impl SmartHome {
             devices
                 .into_iter()
                 .flat_map(|device| device.report())
-                .for_each(|message| println!("{}{}", device_offset, message));
+                .for_each(|message| {
+                    result.push(format!("{}{}", device_offset, message));
+                });
         }
+
+        result
     }
 }
 

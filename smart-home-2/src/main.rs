@@ -69,7 +69,9 @@ fn main() {
         print!("\x1B[H"); // move cursor to (0, 0)
 
         println!("*** Report ***");
-        home.print();
+        for line in home.full_report() {
+            println!("{}", line)
+        }
         println!();
 
         println!("*** List of Rooms ***");
