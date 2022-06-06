@@ -1,5 +1,7 @@
 use crate::common::{Device, SwitchStatusEnum, Report, PRINT_OFFSET};
 use crate::sensors::Sensor;
+#[cfg(test)]
+mod smart_outlet_tests;
 
 pub struct SmartOutlet {
     name: String,
@@ -44,7 +46,7 @@ impl Report for SmartOutlet {
             format!("Outlet: {}", self.name),
             format!("{}power: {}", PRINT_OFFSET, self.get_power_state()),
             format!(
-                "{}consumption: {}kW",
+                "{}consumption: {:.1}kW",
                 PRINT_OFFSET,
                 self.get_power_units() * 0.001
             ),

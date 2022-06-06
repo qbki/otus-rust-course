@@ -9,4 +9,3 @@ pub enum ReportType<'a> {
     /// (Room name, Device name)
     Device(&'a str, &'a str),
 }
-

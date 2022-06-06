@@ -1,5 +1,7 @@
 use crate::common::{Device, Report, PRINT_OFFSET};
 use crate::sensors::Sensor;
+#[cfg(test)]
+mod smart_thermometer_tests;
 
 pub struct SmartThermometer {
     name: String,
