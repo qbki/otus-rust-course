@@ -6,6 +6,12 @@ pub enum SwitchStatusEnum {
     Off,
 }
 
+impl Default for SwitchStatusEnum {
+    fn default() -> Self {
+        SwitchStatusEnum::Off
+    }
+}
+
 impl fmt::Display for SwitchStatusEnum {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {

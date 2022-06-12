@@ -1,4 +1,5 @@
 mod device;
+mod accessor;
 mod eq_floats;
 mod report;
 mod switch_status_enum;

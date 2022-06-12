@@ -1,24 +1,24 @@
 use crate::common::{Device, Report, PRINT_OFFSET};
-use crate::sensors::Sensor;
 #[cfg(test)]
 mod smart_thermometer_tests;
 
+use crate::accessors;
+use std::cell::Cell;
+
 pub struct SmartThermometer {
     name: String,
-    temperature_sensor: Box<dyn Sensor<f64>>,
+    temperature: Cell<f64>,
 }
 
 impl SmartThermometer {
-    pub fn new(name: String, temperature_sensor: Box<dyn Sensor<f64>>) -> Self {
+    pub fn new(name: &str) -> Self {
         Self {
-            name,
-            temperature_sensor,
+            name: name.to_string(),
+            temperature: Cell::new(f64::default()),
         }
     }
 
-    pub fn get_temperature(&self) -> f64 {
-        self.temperature_sensor.sample()
-    }
+    accessors!(get_temperature, set_temperature, temperature, f64);
 }
 
 impl Device for SmartThermometer {

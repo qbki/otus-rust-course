@@ -1,37 +1,29 @@
 use crate::common::{Device, SwitchStatusEnum, Report, PRINT_OFFSET};
-use crate::sensors::Sensor;
+use std::cell::Cell;
+use crate::accessors;
+
 #[cfg(test)]
 mod smart_outlet_tests;
 
 pub struct SmartOutlet {
     name: String,
-    amperage_sensor: Box<dyn Sensor<f64>>,
-    voltage_sensor: Box<dyn Sensor<f64>>,
-    switch_state_sensor: Box<dyn Sensor<SwitchStatusEnum>>,
+    // Power units (Watt)
+    power: Cell<f64>,
+    switch: Cell<SwitchStatusEnum>,
 }
 
 impl SmartOutlet {
-    pub fn new(
-        name: String,
-        amperage_sensor: Box<dyn Sensor<f64>>,
-        voltage_sensor: Box<dyn Sensor<f64>>,
-        switch_state_sensor: Box<dyn Sensor<SwitchStatusEnum>>,
-    ) -> Self {
+    pub fn new(name: &str) -> Self {
         Self {
-            name,
-            amperage_sensor,
-            voltage_sensor,
-            switch_state_sensor,
+            name: name.to_string(),
+            power: Cell::new(f64::default()),
+            switch: Cell::new(SwitchStatusEnum::default()),
         }
     }
 
-    pub fn get_power_state(&self) -> SwitchStatusEnum {
-        self.switch_state_sensor.sample()
-    }
+    accessors!(get_power, set_power, power, f64);
 
-    pub fn get_power_units(&self) -> f64 {
-        self.amperage_sensor.sample() * self.voltage_sensor.sample()
-    }
+    accessors!(get_switch, set_switch, switch, SwitchStatusEnum);
 }
 
 impl Device for SmartOutlet {
@@ -44,11 +36,11 @@ impl Report for SmartOutlet {
     fn report(&self) -> Vec<String> {
         vec![
             format!("Outlet: {}", self.name),
-            format!("{}power: {}", PRINT_OFFSET, self.get_power_state()),
+            format!("{}switch: {}", PRINT_OFFSET, self.get_switch()),
             format!(
                 "{}consumption: {:.1}kW",
                 PRINT_OFFSET,
-                self.get_power_units() * 0.001
+                self.get_power() * 0.001
             ),
         ]
     }
