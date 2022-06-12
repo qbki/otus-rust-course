@@ -1,6 +1,4 @@
-pub extern crate self as smart;
-
-pub mod common;
+mod common;
 mod smart_home;
 mod smart_outlet;
 mod smart_room;

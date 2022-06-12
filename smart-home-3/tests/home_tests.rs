@@ -1,8 +1,8 @@
-extern crate smart_home_3 as smart_home;
+extern crate smart_home_3 as smart;
 
-use smart_home::common::ReportType;
-use smart_home::smart_home::SmartHome;
-use smart_home::smart_thermometer::SmartThermometer;
+use smart::common::ReportType;
+use smart::smart_home::SmartHome;
+use smart::smart_thermometer::SmartThermometer;
 
 const HOME_NAME: &str = "HOME";
 const ROOM_NAME: &str = "ROOM";
