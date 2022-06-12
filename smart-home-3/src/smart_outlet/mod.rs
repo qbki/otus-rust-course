@@ -1,6 +1,6 @@
-use crate::common::{Device, SwitchStatusEnum, Report, PRINT_OFFSET};
-use std::cell::Cell;
 use crate::accessors;
+use crate::common::{Device, Report, SwitchStatusEnum, PRINT_OFFSET};
+use std::cell::Cell;
 
 #[cfg(test)]
 mod smart_outlet_tests;

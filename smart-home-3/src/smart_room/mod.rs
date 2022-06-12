@@ -41,9 +41,7 @@ impl Report for SmartRoom {
 
         let mut devices = self.get_devices();
         devices.sort_by(|a, b| a.get_name().cmp(b.get_name()));
-        let devices_report = devices
-            .into_iter()
-            .flat_map(|device| device.report());
+        let devices_report = devices.into_iter().flat_map(|device| device.report());
         for line in devices_report {
             result.push(format!("{}{}", PRINT_OFFSET, line));
         }

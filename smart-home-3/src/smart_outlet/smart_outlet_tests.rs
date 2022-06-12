@@ -1,5 +1,5 @@
+use crate::common::{Report, SwitchStatusEnum, PRINT_OFFSET};
 use crate::smart_outlet::SmartOutlet;
-use crate::common::{SwitchStatusEnum, Report, PRINT_OFFSET};
 
 #[test]
 fn should_report_status() {
@@ -9,9 +9,13 @@ fn should_report_status() {
 
     let report = outlet.report().join("");
 
-    assert_eq!(report, vec![
-        "Outlet: OUTLET".to_string(),
-        format!("{}switch: On", PRINT_OFFSET),
-        format!("{}consumption: 0.6kW", PRINT_OFFSET),
-    ].join(""));
+    assert_eq!(
+        report,
+        vec![
+            "Outlet: OUTLET".to_string(),
+            format!("{}switch: On", PRINT_OFFSET),
+            format!("{}consumption: 0.6kW", PRINT_OFFSET),
+        ]
+        .join("")
+    );
 }

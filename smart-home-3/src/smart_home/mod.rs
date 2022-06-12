@@ -30,8 +30,8 @@ impl SmartHome {
         }
     }
 
-    pub fn get_room(&self, room_name: &str) -> Option<&Box<SmartRoom>> {
-        self.rooms.get(room_name)
+    pub fn get_room(&self, room_name: &str) -> Option<&SmartRoom> {
+        self.rooms.get(room_name).map(|v| v.as_ref())
     }
 
     pub fn get_rooms(&self) -> Vec<&SmartRoom> {
@@ -41,19 +41,11 @@ impl SmartHome {
     pub fn report_by(&self, report_type: &ReportType) -> String {
         let lines = match report_type {
             ReportType::Home => Some(self.report()),
-            ReportType::Room(room_name) => {
-                self.rooms
-                    .get(*room_name)
-                    .map(|room| room.report())
-            }
-            ReportType::Device(room_name, device_name) => {
-                self.rooms
-                    .get(*room_name)
-                    .and_then(|room| {
-                        room.get_device(&device_name).map(|v| v.report())
-                    })
-            }
-
+            ReportType::Room(room_name) => self.rooms.get(*room_name).map(|room| room.report()),
+            ReportType::Device(room_name, device_name) => self
+                .rooms
+                .get(*room_name)
+                .and_then(|room| room.get_device(device_name).map(|v| v.report())),
         };
 
         match lines {
@@ -70,9 +62,7 @@ impl Report for SmartHome {
 
         let mut rooms = Vec::from_iter(self.rooms.values());
         rooms.sort_by(|a, b| a.get_name().cmp(b.get_name()));
-        let rooms_report = rooms
-            .into_iter()
-            .flat_map(|room| room.report());
+        let rooms_report = rooms.into_iter().flat_map(|room| room.report());
         for line in rooms_report {
             result.push(format!("{}{}", PRINT_OFFSET, line));
         }
