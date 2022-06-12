@@ -82,3 +82,7 @@ temperature: 4.0°C
 
 Device was not found
 ```
+
+## [smart-home-3](./smart-home-3/)
+
+The same as [smart-home-2](./smart-home-2/).
