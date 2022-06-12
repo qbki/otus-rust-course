@@ -40,16 +40,16 @@ fn should_get_report_by_an_entity_type() {
     assert_eq!(
         home.report_by(&ReportType::Home),
         "Home: HOME\n    Room: ROOM\n        Thermometer: DEVICE\n            temperature: 0.0°C",
-        "returns a report about a home"
+        "snapshot was made by ReportType::Home"
     );
     assert_eq!(
         home.report_by(&ReportType::Room(ROOM_NAME)),
         "Room: ROOM\n    Thermometer: DEVICE\n        temperature: 0.0°C",
-        "returns a report about a root"
+        "snapshot was made by ReportType::Room"
     );
     assert_eq!(
         home.report_by(&ReportType::Device(ROOM_NAME, DEVICE_NAME)),
         "Thermometer: DEVICE\n    temperature: 0.0°C",
-        "returns a report about a device"
+        "snapshot was made by ReportType::Device"
     );
 }

@@ -87,8 +87,9 @@ Device was not found
 
 The same as [smart-home-2](./smart-home-2/).
 
-Use this command to run an example:
+Use this commands to run examples:
 
 ```sh
 $ cargo run --example home_report
+$ cargo run --example home_report_by
 ```
