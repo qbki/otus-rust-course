@@ -3,9 +3,9 @@ use crate::common::{SwitchStatusEnum, Report, PRINT_OFFSET};
 
 #[test]
 fn should_report_status() {
-    let outlet = SmartOutlet::new("OUTLET");
-    outlet.set_switch(SwitchStatusEnum::On);
-    outlet.set_power(600.0);
+    let outlet = SmartOutlet::new("OUTLET")
+        .set_switch(SwitchStatusEnum::On)
+        .set_power(600.0);
 
     let report = outlet.report().join("");
 

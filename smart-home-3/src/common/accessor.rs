@@ -5,8 +5,9 @@ macro_rules! accessors {
             self.$field.get()
         }
 
-        pub fn $setter_name(&self, value: $type) {
+        pub fn $setter_name(self, value: $type) -> Self {
             self.$field.set(value);
+            self
         }
     };
 }

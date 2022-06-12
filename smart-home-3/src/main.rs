@@ -6,7 +6,7 @@ mod smart_outlet;
 mod smart_room;
 mod smart_thermometer;
 
-use common::{Report, ReportType::*};
+use common::{Report, SwitchStatusEnum::*, ReportType::*};
 use smart_home::SmartHome;
 use smart_outlet::SmartOutlet;
 use smart_thermometer::SmartThermometer;
@@ -16,11 +16,18 @@ const LIVING_ROOM: &str = "Living room";
 const BASEMENT: &str = "Deep scary basement";
 
 fn main() {
-    let fridge_outlet = SmartOutlet::new("Fridge");
-    let unknown_outlet = SmartOutlet::new("Unknown outlet");
-    let unknown_thermometer = SmartThermometer::new("Unknown thermometer");
-    let outside_thermometer = SmartThermometer::new("Outside");
-    let inside_thermometer = SmartThermometer::new("Inside");
+    let fridge_outlet = SmartOutlet::new("Fridge")
+        .set_power(2000.0)
+        .set_switch(On);
+    let unknown_outlet = SmartOutlet::new("Unknown outlet")
+        .set_power(1000.0)
+        .set_switch(Off);
+    let unknown_thermometer = SmartThermometer::new("Unknown thermometer")
+        .set_temperature(-10.0);
+    let outside_thermometer = SmartThermometer::new("Outside")
+        .set_temperature(30.0);
+    let inside_thermometer = SmartThermometer::new("Inside")
+        .set_temperature(23.0);
 
     let mut home = SmartHome::new("Home, sweet home");
     home.add_device(KITCHEN, Box::new(fridge_outlet));
@@ -39,9 +46,6 @@ fn main() {
     ));
 
     {
-        print!("\x1B[2J"); // clear screen
-        print!("\x1B[H"); // move cursor to (0, 0)
-
         println!("*** Report ***");
         println!("{}", home.report().join("\n"));
         println!();
@@ -53,7 +57,10 @@ fn main() {
         println!();
 
         println!("*** List of devices from \"{}\"***", BASEMENT);
-        if let Some(devices) = home.get_devices_from(BASEMENT) {
+        let devices = home
+            .get_room(BASEMENT)
+            .and_then(|room| Some(room.get_devices()));
+        if let Some(devices) = devices {
             for device in devices {
                 println!("{}", device.get_name());
             }

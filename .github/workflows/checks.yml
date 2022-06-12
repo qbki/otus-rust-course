@@ -28,3 +28,9 @@ jobs:
         with:
           command: make
           args: checks
+
+      - name: Run Tests
+        uses: actions-rs/cargo@v1
+        with:
+          command: make
+          args: test

@@ -30,12 +30,12 @@ impl SmartHome {
         }
     }
 
-    pub fn get_rooms(&self) -> Vec<&SmartRoom> {
-        self.rooms.values().map(|v| v.as_ref()).collect()
+    pub fn get_room(&self, room_name: &str) -> Option<&Box<SmartRoom>> {
+        self.rooms.get(room_name)
     }
 
-    pub fn get_devices_from(&self, room_name: &str) -> Option<Vec<&dyn Device>> {
-        self.rooms.get(room_name).map(|room| room.get_devices())
+    pub fn get_rooms(&self) -> Vec<&SmartRoom> {
+        self.rooms.values().map(|v| v.as_ref()).collect()
     }
 
     pub fn report_by(&self, report_type: &ReportType) -> String {
