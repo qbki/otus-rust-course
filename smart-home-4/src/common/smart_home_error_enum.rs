@@ -1,6 +1,6 @@
-use std::fmt;
-use std::error::Error;
 use crate::common::DscError;
+use std::error::Error;
+use std::fmt;
 
 #[derive(Debug)]
 pub enum SmartHomeErrorEnum {

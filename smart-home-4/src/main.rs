@@ -23,14 +23,14 @@ fn main() {
 
     saved_for_report.push_str("\n\n");
 
-    let wrong_device_report: Result<&SmartOutlet, SmartHomeErrorEnum> = home.get(&RequestType::Device(BASEMENT, "WRONG_DEVICE_NAME")).into();
-    match wrong_device_report {
-        Err(error) => {
-            saved_for_report.push_str(error.to_string().as_ref());
-            saved_for_report.push_str("\n");
-            saved_for_report.push_str(format!("{:?}", error.source()).as_ref());
-        }
-        _ => (),
+    let wrong_device_report: Result<&SmartOutlet, SmartHomeErrorEnum> = home
+        .get(&RequestType::Device(BASEMENT, "WRONG_DEVICE_NAME"))
+        .into();
+
+    if let Err(error) = wrong_device_report {
+        saved_for_report.push_str(error.to_string().as_ref());
+        saved_for_report.push('\n');
+        saved_for_report.push_str(format!("{:?}", error.source()).as_ref());
     }
 
     println!("*** List of Rooms ***");

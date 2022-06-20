@@ -1,5 +1,5 @@
 use crate::common::{
-    Device, DeviceInterface, Report, RequestType, SmartHomeErrorEnum, DscError, PRINT_OFFSET,
+    Device, DeviceInterface, DscError, Report, RequestType, SmartHomeErrorEnum, PRINT_OFFSET,
 };
 use crate::smart_outlet::SmartOutlet;
 use crate::smart_room::SmartRoom;
@@ -57,7 +57,11 @@ impl SmartHome {
                     Some(room) => room
                         .get_device(device_name)
                         .map(ResponseData::Device)
-                        .ok_or(SmartHomeErrorEnum::NotFoundDeviceError(DscError::new("Device was not found".to_string()))),
+                        .ok_or_else(|| {
+                            SmartHomeErrorEnum::NotFoundDeviceError(DscError::new(
+                                "Device was not found".to_string(),
+                            ))
+                        }),
                     None => Err(SmartHomeErrorEnum::NotFoundRoomError),
                 }
             }
@@ -99,7 +103,9 @@ impl<'a> From<Response<'a>> for Result<&'a SmartOutlet, SmartHomeErrorEnum> {
     fn from(value: Response<'a>) -> Self {
         match value {
             Response(Ok(ResponseData::Device(Device::Outlet(payload)))) => Ok(payload),
-            _ => Err(SmartHomeErrorEnum::NotFoundDeviceError(DscError::new("Outlet is not found".to_string()))),
+            _ => Err(SmartHomeErrorEnum::NotFoundDeviceError(DscError::new(
+                "Outlet is not found".to_string(),
+            ))),
         }
     }
 }
@@ -108,7 +114,9 @@ impl<'a> From<Response<'a>> for Result<&'a SmartThermometer, SmartHomeErrorEnum>
     fn from(value: Response<'a>) -> Self {
         match value {
             Response(Ok(ResponseData::Device(Device::Thermometer(payload)))) => Ok(payload),
-            _ => Err(SmartHomeErrorEnum::NotFoundDeviceError(DscError::new("Thermometer is not found".to_string()))),
+            _ => Err(SmartHomeErrorEnum::NotFoundDeviceError(DscError::new(
+                "Thermometer is not found".to_string(),
+            ))),
         }
     }
 }
@@ -121,7 +129,9 @@ impl<'a> From<Response<'a>> for Result<&'a dyn DeviceInterface, SmartHomeErrorEn
                 Device::Thermometer(thermometer) => Ok(thermometer),
                 Device::Generic(generic) => Ok(generic.as_ref()),
             },
-            _ => Err(SmartHomeErrorEnum::NotFoundDeviceError(DscError::new("Generic device is not found".to_string()))),
+            _ => Err(SmartHomeErrorEnum::NotFoundDeviceError(DscError::new(
+                "Generic device is not found".to_string(),
+            ))),
         }
     }
 }
