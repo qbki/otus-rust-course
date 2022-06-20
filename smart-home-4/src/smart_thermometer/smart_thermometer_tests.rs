@@ -3,7 +3,8 @@ use crate::smart_thermometer::SmartThermometer;
 
 #[test]
 fn should_report_status() {
-    let outlet = SmartThermometer::new("THERMOMETER").set_temperature(30.0);
+    let outlet = SmartThermometer::new("THERMOMETER");
+    outlet.set_temperature(30.0);
 
     let report = outlet.report().join("");
 

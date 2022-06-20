@@ -3,7 +3,8 @@ use crate::smart_outlet::SmartOutlet;
 
 #[test]
 fn should_report_status() {
-    let outlet = SmartOutlet::new("OUTLET")
+    let outlet = SmartOutlet::new("OUTLET");
+    outlet
         .set_switch(SwitchStatusEnum::On)
         .set_power(600.0);
 

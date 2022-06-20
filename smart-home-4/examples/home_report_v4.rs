@@ -6,5 +6,5 @@ use smart::mocks::make_home;
 fn main() {
     let home = make_home();
 
-    println!("{}", home.report().join("\n"));
+    println!("{}", home.report_to_string());
 }

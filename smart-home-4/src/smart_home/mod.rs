@@ -48,8 +48,8 @@ impl SmartHome {
         }
     }
 
-    pub fn get(&self, report_type: &RequestType) -> Response {
-        let result = match report_type {
+    pub fn get(&self, request_type: &RequestType) -> Response {
+        let result = match request_type {
             RequestType::Home => {
                 Result::Ok(ResponseData::Home(self))
             },
@@ -93,6 +93,15 @@ impl Report for SmartHome {
         }
 
         result
+    }
+}
+
+impl <'a>From<Response<'a>> for Result<&'a SmartRoom, SmartHomeErrorEnum> {
+    fn from(value: Response<'a>) -> Self {
+        match value {
+            Response(Ok(ResponseData::Room(payload))) => Ok(payload),
+            _ => Err(SmartHomeErrorEnum::NotFoundRoomError),
+        }
     }
 }
 
