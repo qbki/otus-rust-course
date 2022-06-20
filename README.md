@@ -90,6 +90,17 @@ The same as [smart-home-2](./smart-home-2/).
 Use this commands to run examples:
 
 ```sh
-$ cargo run --example home_report
+$ cargo run --example home_report_v3
 $ cargo run --example home_report_by
+```
+
+## [smart-home-4](./smart-home-4/)
+
+The same as [smart-home-3](./smart-home-3/).
+
+Use this commands to run examples:
+
+```sh
+$ cargo run --example home_report_v4
+$ cargo run --example home_report_by_request_type
 ```
