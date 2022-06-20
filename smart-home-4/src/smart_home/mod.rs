@@ -1,13 +1,8 @@
 use crate::common::{
-    Device,
-    DeviceInterface,
-    Report,
-    RequestType,
-    SmartHomeErrorEnum,
-    PRINT_OFFSET,
+    Device, DeviceInterface, Report, RequestType, SmartHomeErrorEnum, PRINT_OFFSET,
 };
-use crate::smart_room::SmartRoom;
 use crate::smart_outlet::SmartOutlet;
+use crate::smart_room::SmartRoom;
 use crate::smart_thermometer::SmartThermometer;
 use std::collections::HashMap;
 use std::ops::Deref;
@@ -50,26 +45,22 @@ impl SmartHome {
 
     pub fn get(&self, request_type: &RequestType) -> Response {
         let result = match request_type {
-            RequestType::Home => {
-                Result::Ok(ResponseData::Home(self))
-            },
-            RequestType::Room(room_name) => {
-                self.rooms.get(*room_name)
-                    .map(|v| ResponseData::Room(v.as_ref()))
-                    .ok_or(SmartHomeErrorEnum::NotFoundRoomError)
-            },
+            RequestType::Home => Result::Ok(ResponseData::Home(self)),
+            RequestType::Room(room_name) => self
+                .rooms
+                .get(*room_name)
+                .map(|v| ResponseData::Room(v.as_ref()))
+                .ok_or(SmartHomeErrorEnum::NotFoundRoomError),
             RequestType::Device(room_name, device_name) => {
                 let room = self.rooms.get(*room_name);
                 match room {
-                    Some(room) => {
-                        room
-                            .get_device(device_name)
-                            .map(|device| ResponseData::Device(device))
-                            .ok_or(SmartHomeErrorEnum::NotFoundDeviceError)
-                    }
+                    Some(room) => room
+                        .get_device(device_name)
+                        .map(ResponseData::Device)
+                        .ok_or(SmartHomeErrorEnum::NotFoundDeviceError),
                     None => Err(SmartHomeErrorEnum::NotFoundRoomError),
                 }
-            },
+            }
         };
         Response(result)
     }
@@ -77,7 +68,6 @@ impl SmartHome {
     pub fn get_rooms(&self) -> Vec<&SmartRoom> {
         self.rooms.values().map(|v| v.as_ref()).collect()
     }
-
 }
 
 impl Report for SmartHome {
@@ -96,7 +86,7 @@ impl Report for SmartHome {
     }
 }
 
-impl <'a>From<Response<'a>> for Result<&'a SmartRoom, SmartHomeErrorEnum> {
+impl<'a> From<Response<'a>> for Result<&'a SmartRoom, SmartHomeErrorEnum> {
     fn from(value: Response<'a>) -> Self {
         match value {
             Response(Ok(ResponseData::Room(payload))) => Ok(payload),
@@ -105,7 +95,7 @@ impl <'a>From<Response<'a>> for Result<&'a SmartRoom, SmartHomeErrorEnum> {
     }
 }
 
-impl <'a>From<Response<'a>> for Result<&'a SmartOutlet, SmartHomeErrorEnum> {
+impl<'a> From<Response<'a>> for Result<&'a SmartOutlet, SmartHomeErrorEnum> {
     fn from(value: Response<'a>) -> Self {
         match value {
             Response(Ok(ResponseData::Device(Device::Outlet(payload)))) => Ok(payload),
@@ -114,7 +104,7 @@ impl <'a>From<Response<'a>> for Result<&'a SmartOutlet, SmartHomeErrorEnum> {
     }
 }
 
-impl <'a>From<Response<'a>> for Result<&'a SmartThermometer, SmartHomeErrorEnum> {
+impl<'a> From<Response<'a>> for Result<&'a SmartThermometer, SmartHomeErrorEnum> {
     fn from(value: Response<'a>) -> Self {
         match value {
             Response(Ok(ResponseData::Device(Device::Thermometer(payload)))) => Ok(payload),
@@ -123,15 +113,13 @@ impl <'a>From<Response<'a>> for Result<&'a SmartThermometer, SmartHomeErrorEnum>
     }
 }
 
-impl <'a>From<Response<'a>> for Result<&'a dyn DeviceInterface, SmartHomeErrorEnum> {
+impl<'a> From<Response<'a>> for Result<&'a dyn DeviceInterface, SmartHomeErrorEnum> {
     fn from(value: Response<'a>) -> Self {
         match value {
-            Response(Ok(ResponseData::Device(device))) => {
-                match device {
-                    Device::Outlet(outlet) => Ok(outlet),
-                    Device::Thermometer(thermometer) => Ok(thermometer),
-                    Device::Generic(generic) => Ok(generic.as_ref()),
-                }
+            Response(Ok(ResponseData::Device(device))) => match device {
+                Device::Outlet(outlet) => Ok(outlet),
+                Device::Thermometer(thermometer) => Ok(thermometer),
+                Device::Generic(generic) => Ok(generic.as_ref()),
             },
             _ => Err(SmartHomeErrorEnum::NotFoundDeviceError),
         }
@@ -148,7 +136,7 @@ impl<'a> From<Response<'a>> for String {
                     Device::Outlet(device) => device.report_to_string(),
                     Device::Thermometer(device) => device.report_to_string(),
                     Device::Generic(device) => device.report_to_string(),
-                }
+                },
             },
             Err(error) => error.into(),
         }

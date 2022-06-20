@@ -1,4 +1,4 @@
-use crate::common::{SwitchStatusEnum::*, Device};
+use crate::common::{Device, SwitchStatusEnum::*};
 use crate::smart_home::SmartHome;
 use crate::smart_outlet::SmartOutlet;
 use crate::smart_thermometer::SmartThermometer;
@@ -11,14 +11,10 @@ pub const UNKNOWN_OUTLET: &str = "Unknown outlet";
 
 pub fn make_home() -> SmartHome {
     let fridge_outlet = SmartOutlet::new("Fridge");
-    fridge_outlet
-        .set_power(2000.0)
-        .set_switch(On);
+    fridge_outlet.set_power(2000.0).set_switch(On);
 
     let unknown_outlet = SmartOutlet::new(UNKNOWN_OUTLET);
-    unknown_outlet
-        .set_power(1000.0)
-        .set_switch(Off);
+    unknown_outlet.set_power(1000.0).set_switch(Off);
 
     let unknown_thermometer = SmartThermometer::new("Unknown thermometer");
     unknown_thermometer.set_temperature(-10.0);

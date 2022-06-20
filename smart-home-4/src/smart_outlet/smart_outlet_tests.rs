@@ -4,9 +4,7 @@ use crate::smart_outlet::SmartOutlet;
 #[test]
 fn should_report_status() {
     let outlet = SmartOutlet::new("OUTLET");
-    outlet
-        .set_switch(SwitchStatusEnum::On)
-        .set_power(600.0);
+    outlet.set_switch(SwitchStatusEnum::On).set_power(600.0);
 
     let report = outlet.report().join("");
 

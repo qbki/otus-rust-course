@@ -1,6 +1,6 @@
-use std::rc::Rc;
-use std::collections::HashMap;
 use crate::common::{Device, DeviceInterface, Report, PRINT_OFFSET};
+use std::collections::HashMap;
+use std::rc::Rc;
 
 pub struct SmartRoom {
     name: String,
@@ -20,7 +20,8 @@ impl SmartRoom {
     }
 
     pub fn add_device(&mut self, device: Device) {
-        self.devices.insert(device.get_name().to_string(), Rc::new(device));
+        self.devices
+            .insert(device.get_name().to_string(), Rc::new(device));
     }
 
     pub fn get_device(&self, device_name: &str) -> Option<&Device> {

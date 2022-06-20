@@ -1,6 +1,6 @@
 extern crate smart_home_4 as smart;
 
-use smart::common::{Report, Device, DeviceInterface, RequestType, SmartHomeErrorEnum};
+use smart::common::{Device, DeviceInterface, Report, RequestType, SmartHomeErrorEnum};
 use smart::smart_home::SmartHome;
 use smart::smart_room::SmartRoom;
 use smart::smart_thermometer::SmartThermometer;
@@ -25,7 +25,9 @@ fn should_add_a_device_into_a_home() {
     let thermometer = SmartThermometer::new(DEVICE_NAME);
     home.add_device(ROOM_NAME, Device::Thermometer(thermometer));
 
-    let device: Result<&dyn DeviceInterface, SmartHomeErrorEnum> = home.get(&RequestType::Device(ROOM_NAME, DEVICE_NAME)).into();
+    let device: Result<&dyn DeviceInterface, SmartHomeErrorEnum> = home
+        .get(&RequestType::Device(ROOM_NAME, DEVICE_NAME))
+        .into();
 
     assert_eq!(device.unwrap().get_name(), DEVICE_NAME);
 }
@@ -36,8 +38,11 @@ fn should_get_report_by_an_entity_type() {
     let thermometer = SmartThermometer::new(DEVICE_NAME);
     home.add_device(ROOM_NAME, Device::Generic(Box::new(thermometer)));
 
-    let room: Result<&SmartRoom, SmartHomeErrorEnum> = home.get(&RequestType::Room(ROOM_NAME)).into();
-    let device: Result<&dyn DeviceInterface, SmartHomeErrorEnum> = home.get(&RequestType::Device(ROOM_NAME, DEVICE_NAME)).into();
+    let room: Result<&SmartRoom, SmartHomeErrorEnum> =
+        home.get(&RequestType::Room(ROOM_NAME)).into();
+    let device: Result<&dyn DeviceInterface, SmartHomeErrorEnum> = home
+        .get(&RequestType::Device(ROOM_NAME, DEVICE_NAME))
+        .into();
 
     assert_eq!(
         home.report_to_string(),
