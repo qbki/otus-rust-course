@@ -9,6 +9,7 @@ use common::{DeviceInterface, Report, RequestType, SmartHomeErrorEnum, SwitchSta
 use mocks::{make_home, BASEMENT, UNKNOWN_OUTLET};
 use smart_home::ResponseData;
 use smart_outlet::SmartOutlet;
+use std::error::Error;
 
 fn main() {
     let home = make_home();
@@ -22,10 +23,15 @@ fn main() {
 
     saved_for_report.push_str("\n\n");
 
-    let wrong_device_report: String = home
-        .get(&RequestType::Device(BASEMENT, "WRONG_DEVICE_NAME"))
-        .into();
-    saved_for_report.push_str(&wrong_device_report);
+    let wrong_device_report: Result<&SmartOutlet, SmartHomeErrorEnum> = home.get(&RequestType::Device(BASEMENT, "WRONG_DEVICE_NAME")).into();
+    match wrong_device_report {
+        Err(error) => {
+            saved_for_report.push_str(error.to_string().as_ref());
+            saved_for_report.push_str("\n");
+            saved_for_report.push_str(format!("{:?}", error.source()).as_ref());
+        }
+        _ => (),
+    }
 
     println!("*** List of Rooms ***");
     for room in home.get_rooms() {
