@@ -96,7 +96,7 @@ fn thermometer_management(writer: &mut dyn io::Write, device: &SmartThermometer)
     while state != ThermometerManagement::Exit {
         match state {
             ThermometerManagement::Greeting => {
-                writeln!(writer, "Outlet Management")?;
+                writeln!(writer, "Thermometer management")?;
             }
             ThermometerManagement::Report => {
                 writeln!(writer, "{}", device.report_to_string())?;
@@ -139,7 +139,7 @@ fn generic_management(writer: &mut dyn io::Write, device: &dyn DeviceInterface) 
     while state != GenericManagement::Exit {
         match state {
             GenericManagement::Greeting => {
-                writeln!(writer, "Outlet Management")?;
+                writeln!(writer, "Generic management")?;
             }
             GenericManagement::Report => {
                 writeln!(writer, "{}", device.report_to_string())?;
