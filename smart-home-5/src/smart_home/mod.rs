@@ -33,6 +33,10 @@ impl SmartHome {
             .insert(room_name.to_string(), Box::new(SmartRoom::new(room_name)));
     }
 
+    pub fn remove_room(&mut self, room_name: &str) {
+        self.rooms.remove(&room_name.to_string());
+    }
+
     pub fn add_device(&mut self, room_name: &str, device: Device) {
         if !self.rooms.contains_key(room_name) {
             self.add_room(room_name);

@@ -11,6 +11,7 @@ enum TuiState {
     Greeting,
     WrongCommand,
     AddRoom,
+    RemoveRoom,
     RoomManagement,
     Report,
 }
@@ -24,6 +25,15 @@ fn add_room(writer: &mut dyn io::Write, home: &mut SmartHome) -> io::Result<()> 
 
     let name = get_name(writer)?;
     home.add_room(&name);
+
+    Result::Ok(())
+}
+
+fn remove_room(writer: &mut dyn io::Write, home: &mut SmartHome) -> io::Result<()> {
+    writeln!(writer, "Please enter a room name:")?;
+
+    let name = get_name(writer)?;
+    home.remove_room(&name);
 
     Result::Ok(())
 }
@@ -48,6 +58,7 @@ pub fn home_management(writer: &mut dyn io::Write, home: &mut SmartHome) -> io::
         match state {
             TuiState::Greeting => greeting(writer)?,
             TuiState::AddRoom => add_room(writer, home)?,
+            TuiState::RemoveRoom => remove_room(writer, home)?,
             TuiState::RoomManagement => handle_rooms(writer, home)?,
             TuiState::Report => println!("{}", home.report_to_string()),
             _ => wrong_command(writer)?,
@@ -59,9 +70,10 @@ pub fn home_management(writer: &mut dyn io::Write, home: &mut SmartHome) -> io::
             [
                 "Posible actions:",
                 "1 - Add a room",
-                "2 - Select a room",
-                "3 - Report",
-                "4 - Exit",
+                "2 - Remove a room",
+                "3 - Select a room",
+                "4 - Report",
+                "5 - Exit",
             ]
             .join("\n")
         )?;
@@ -69,9 +81,10 @@ pub fn home_management(writer: &mut dyn io::Write, home: &mut SmartHome) -> io::
         state = match get_input() {
             Result::Ok(input) => match input.as_ref() {
                 "1" => TuiState::AddRoom,
-                "2" => TuiState::RoomManagement,
-                "3" => TuiState::Report,
-                "4" => TuiState::Exit,
+                "2" => TuiState::RemoveRoom,
+                "3" => TuiState::RoomManagement,
+                "4" => TuiState::Report,
+                "5" => TuiState::Exit,
                 _ => TuiState::WrongCommand,
             },
             _ => TuiState::WrongCommand,
