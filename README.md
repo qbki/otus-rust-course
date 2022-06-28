@@ -104,3 +104,42 @@ Use this commands to run examples:
 $ cargo run --example home_report_v4
 $ cargo run --example home_report_by_request_type
 ```
+
+## [smart-home-5](./smart-home-5/)
+
+Added Text-based user interface
+
+Output:
+
+```sh
+1 - On
+2 - Off
+3 - Set power level
+4 - Report
+5 - Back
+2
+1 - On
+2 - Off
+3 - Set power level
+4 - Report
+5 - Back
+4
+Outlet: Some
+    switch: Off
+    consumption: 0.0kW
+1 - On
+2 - Off
+3 - Set power level
+4 - Report
+5 - Back
+1
+1 - On
+2 - Off
+3 - Set power level
+4 - Report
+5 - Back
+4
+Outlet: Some
+    switch: On
+    consumption: 0.0kW
+```
