@@ -38,22 +38,25 @@ fn should_get_report_by_an_entity_type() {
     let thermometer = SmartThermometer::new(DEVICE_NAME);
     home.add_device(ROOM_NAME, Device::Generic(Box::new(thermometer)));
 
-    let room: Result<&SmartRoom, SmartHomeErrorEnum> =
-        home.get(&RequestType::Room(ROOM_NAME)).into();
-    let device: Result<&dyn DeviceInterface, SmartHomeErrorEnum> = home
-        .get(&RequestType::Device(ROOM_NAME, DEVICE_NAME))
-        .into();
-
     assert_eq!(
         home.report_to_string(),
         "Home: HOME\n    Room: ROOM\n        Thermometer: DEVICE\n            temperature: 0.0°C",
         "snapshot was made by ReportType::Home"
     );
+
+    let room: Result<&mut SmartRoom, SmartHomeErrorEnum> =
+        home.get(&RequestType::Room(ROOM_NAME)).into();
+
     assert_eq!(
         room.unwrap().report_to_string(),
         "Room: ROOM\n    Thermometer: DEVICE\n        temperature: 0.0°C",
         "snapshot was made by ReportType::Room"
     );
+
+    let device: Result<&dyn DeviceInterface, SmartHomeErrorEnum> = home
+        .get(&RequestType::Device(ROOM_NAME, DEVICE_NAME))
+        .into();
+
     assert_eq!(
         device.unwrap().report_to_string(),
         "Thermometer: DEVICE\n    temperature: 0.0°C",
