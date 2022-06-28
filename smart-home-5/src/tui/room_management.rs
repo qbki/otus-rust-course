@@ -12,6 +12,7 @@ enum RoomManagement {
     Greeting,
     AddOutlet,
     AddThermometer,
+    RemoveDevice,
     DeviceManagement,
     WrongCommand,
     Report,
@@ -43,6 +44,15 @@ fn add_thermometer(writer: &mut dyn io::Write, room: &mut SmartRoom) -> io::Resu
     Result::Ok(())
 }
 
+fn remove_device(writer: &mut dyn io::Write, room: &mut SmartRoom) -> io::Result<()> {
+    writeln!(writer, "Please enter a device name:")?;
+
+    let name = get_name(writer)?;
+    room.remove_device(&name);
+
+    Result::Ok(())
+}
+
 fn handle_devices(writer: &mut dyn io::Write, room: &mut SmartRoom) -> io::Result<()> {
     writeln!(writer, "Please enter a device name:")?;
 
@@ -64,6 +74,7 @@ pub fn room_management(writer: &mut dyn io::Write, room: &mut SmartRoom) -> io::
             RoomManagement::Report => println!("{}", room.report_to_string()),
             RoomManagement::AddOutlet => add_outlet(writer, room)?,
             RoomManagement::AddThermometer => add_thermometer(writer, room)?,
+            RoomManagement::RemoveDevice => remove_device(writer, room)?,
             RoomManagement::DeviceManagement => handle_devices(writer, room)?,
             _ => wrong_command(writer)?,
         }
@@ -76,8 +87,9 @@ pub fn room_management(writer: &mut dyn io::Write, room: &mut SmartRoom) -> io::
                 "1 - Add an outlet",
                 "2 - Add a thermometer",
                 "3 - Select a device",
-                "4 - Report",
-                "5 - Back",
+                "4 - Remove a device",
+                "5 - Report",
+                "6 - Back",
             ]
             .join("\n")
         )?;
@@ -87,8 +99,9 @@ pub fn room_management(writer: &mut dyn io::Write, room: &mut SmartRoom) -> io::
                 "1" => RoomManagement::AddOutlet,
                 "2" => RoomManagement::AddThermometer,
                 "3" => RoomManagement::DeviceManagement,
-                "4" => RoomManagement::Report,
-                "5" => RoomManagement::Exit,
+                "4" => RoomManagement::RemoveDevice,
+                "5" => RoomManagement::Report,
+                "6" => RoomManagement::Exit,
                 _ => RoomManagement::WrongCommand,
             },
             _ => RoomManagement::WrongCommand,

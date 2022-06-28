@@ -34,7 +34,7 @@ impl SmartHome {
     }
 
     pub fn remove_room(&mut self, room_name: &str) {
-        self.rooms.remove(&room_name.to_string());
+        self.rooms.remove(room_name);
     }
 
     pub fn add_device(&mut self, room_name: &str, device: Device) {

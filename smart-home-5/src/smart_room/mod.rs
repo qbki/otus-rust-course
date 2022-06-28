@@ -24,6 +24,10 @@ impl SmartRoom {
             .insert(device.get_name().to_string(), Rc::new(device));
     }
 
+    pub fn remove_device(&mut self, name: &str) {
+        self.devices.remove(name);
+    }
+
     pub fn get_device(&self, device_name: &str) -> Option<&Device> {
         self.devices.get(device_name).map(|device| device.as_ref())
     }
