@@ -18,11 +18,15 @@ pub fn get_name(writer: &mut dyn io::Write) -> io::Result<String> {
                 }
 
                 if name.chars().count() > MAX_STRING_LENGTH {
-                    writeln!(writer, "Error: Number of characters should be less or equal to {}", MAX_STRING_LENGTH)?;
+                    writeln!(
+                        writer,
+                        "Error: Number of characters should be less or equal to {}",
+                        MAX_STRING_LENGTH
+                    )?;
                     continue;
                 }
 
-                return Result::Ok(name)
+                return Result::Ok(name);
             }
             Result::Err(_) => {
                 writeln!(writer, "Error: Unknown error")?;
@@ -51,7 +55,6 @@ pub fn get_input() -> io::Result<String> {
     let mut input = String::new();
     match io::stdin().read_line(&mut input) {
         io::Result::Ok(_) => io::Result::Ok(input.trim().into()),
-        io::Result::Err(error) => io::Result::Err(error)
+        io::Result::Err(error) => io::Result::Err(error),
     }
 }
-

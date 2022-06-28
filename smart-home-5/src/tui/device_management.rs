@@ -1,8 +1,8 @@
-use std::io;
+use super::utils::{get_input, get_number, wrong_command};
 use crate::common::{Device, DeviceInterface, Report, SwitchStatusEnum};
 use crate::smart_outlet::SmartOutlet;
 use crate::smart_thermometer::SmartThermometer;
-use super::utils::{get_input, get_number, wrong_command};
+use std::io;
 
 #[derive(PartialEq)]
 enum OutletManagement {
@@ -26,6 +26,10 @@ enum ThermometerManagement {
 
 #[derive(PartialEq)]
 enum GenericManagement {
+    Exit,
+    Greeting,
+    WrongCommand,
+    Report,
 }
 
 fn outlet_management(writer: &mut dyn io::Write, device: &SmartOutlet) -> io::Result<()> {
@@ -57,26 +61,29 @@ fn outlet_management(writer: &mut dyn io::Write, device: &SmartOutlet) -> io::Re
             }
         }
 
-        writeln!(writer, "{}", [
-            "1 - On",
-            "2 - Off",
-            "3 - Set power level",
-            "4 - Report",
-            "5 - Back",
-        ].join("\n"))?;
+        writeln!(
+            writer,
+            "{}",
+            [
+                "1 - On",
+                "2 - Off",
+                "3 - Set power level",
+                "4 - Report",
+                "5 - Back",
+            ]
+            .join("\n")
+        )?;
 
         state = match get_input() {
-            Result::Ok(input) => {
-                match input.as_ref() {
-                    "1" => OutletManagement::On,
-                    "2" => OutletManagement::Off,
-                    "3" => OutletManagement::SetPower,
-                    "4" => OutletManagement::Report,
-                    "5" => OutletManagement::Exit,
-                    _ => OutletManagement::WrongCommand,
-                }
-            }
-            _ => OutletManagement::WrongCommand
+            Result::Ok(input) => match input.as_ref() {
+                "1" => OutletManagement::On,
+                "2" => OutletManagement::Off,
+                "3" => OutletManagement::SetPower,
+                "4" => OutletManagement::Report,
+                "5" => OutletManagement::Exit,
+                _ => OutletManagement::WrongCommand,
+            },
+            _ => OutletManagement::WrongCommand,
         };
     }
 
@@ -106,37 +113,35 @@ fn thermometer_management(writer: &mut dyn io::Write, device: &SmartThermometer)
             }
         }
 
-        writeln!(writer, "{}", [
-            "1 - Set temperature",
-            "2 - Report",
-            "3 - Back",
-        ].join("\n"))?;
+        writeln!(
+            writer,
+            "{}",
+            ["1 - Set temperature", "2 - Report", "3 - Back"].join("\n")
+        )?;
 
         state = match get_input() {
-            Result::Ok(input) => {
-                match input.as_ref() {
-                    "1" => ThermometerManagement::SetTemperature,
-                    "2" => ThermometerManagement::Report,
-                    "3" => ThermometerManagement::Exit,
-                    _ => ThermometerManagement::WrongCommand,
-                }
-            }
-            _ => ThermometerManagement::WrongCommand
+            Result::Ok(input) => match input.as_ref() {
+                "1" => ThermometerManagement::SetTemperature,
+                "2" => ThermometerManagement::Report,
+                "3" => ThermometerManagement::Exit,
+                _ => ThermometerManagement::WrongCommand,
+            },
+            _ => ThermometerManagement::WrongCommand,
         };
     }
 
     Result::Ok(())
 }
 
-fn generic_management(writer: &mut dyn io::Write, device: &Box<dyn DeviceInterface>) -> io::Result<()> {
-    let mut state = ThermometerManagement::Greeting;
+fn generic_management(writer: &mut dyn io::Write, device: &dyn DeviceInterface) -> io::Result<()> {
+    let mut state = GenericManagement::Greeting;
 
-    while state != ThermometerManagement::Exit {
+    while state != GenericManagement::Exit {
         match state {
-            ThermometerManagement::Greeting => {
+            GenericManagement::Greeting => {
                 writeln!(writer, "Outlet Management")?;
             }
-            ThermometerManagement::Report => {
+            GenericManagement::Report => {
                 writeln!(writer, "{}", device.report_to_string())?;
             }
             _ => {
@@ -144,20 +149,15 @@ fn generic_management(writer: &mut dyn io::Write, device: &Box<dyn DeviceInterfa
             }
         }
 
-        writeln!(writer, "{}", [
-            "1 - Report",
-            "2 - Back",
-        ].join("\n"))?;
+        writeln!(writer, "{}", ["1 - Report", "2 - Back"].join("\n"))?;
 
         state = match get_input() {
-            Result::Ok(input) => {
-                match input.as_ref() {
-                    "1" => ThermometerManagement::Report,
-                    "2" => ThermometerManagement::Exit,
-                    _ => ThermometerManagement::WrongCommand,
-                }
-            }
-            _ => ThermometerManagement::WrongCommand
+            Result::Ok(input) => match input.as_ref() {
+                "1" => GenericManagement::Report,
+                "2" => GenericManagement::Exit,
+                _ => GenericManagement::WrongCommand,
+            },
+            _ => GenericManagement::WrongCommand,
         };
     }
 
@@ -168,6 +168,6 @@ pub fn device_management(writer: &mut dyn io::Write, device: &Device) -> io::Res
     match device {
         Device::Outlet(outlet) => outlet_management(writer, outlet),
         Device::Thermometer(thermometer) => thermometer_management(writer, thermometer),
-        Device::Generic(generic) => generic_management(writer, generic),
+        Device::Generic(generic) => generic_management(writer, generic.as_ref()),
     }
 }

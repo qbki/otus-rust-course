@@ -1,10 +1,10 @@
-use std::io;
-use crate::common::{Device, Report};
-use crate::smart_room::SmartRoom;
-use crate::smart_outlet::SmartOutlet;
-use crate::smart_thermometer::SmartThermometer;
 use super::device_management::device_management;
-use super::utils::{get_name, get_input, wrong_command};
+use super::utils::{get_input, get_name, wrong_command};
+use crate::common::{Device, Report};
+use crate::smart_outlet::SmartOutlet;
+use crate::smart_room::SmartRoom;
+use crate::smart_thermometer::SmartThermometer;
+use std::io;
 
 #[derive(PartialEq)]
 enum RoomManagement {
@@ -18,7 +18,7 @@ enum RoomManagement {
 }
 
 fn greeting(writer: &mut dyn io::Write) -> io::Result<()> {
-    writeln!(writer, "{}", "Room Management")
+    writeln!(writer, "Room Management")
 }
 
 fn add_outlet(writer: &mut dyn io::Write, room: &mut SmartRoom) -> io::Result<()> {
@@ -26,7 +26,7 @@ fn add_outlet(writer: &mut dyn io::Write, room: &mut SmartRoom) -> io::Result<()
 
     let name = get_name(writer)?;
     let device = SmartOutlet::new(&name);
-    
+
     room.add_device(Device::Outlet(device));
 
     Result::Ok(())
@@ -37,7 +37,7 @@ fn add_thermometer(writer: &mut dyn io::Write, room: &mut SmartRoom) -> io::Resu
 
     let name = get_name(writer)?;
     let device = SmartThermometer::new(&name);
-    
+
     room.add_device(Device::Thermometer(device));
 
     Result::Ok(())
@@ -68,27 +68,30 @@ pub fn room_management(writer: &mut dyn io::Write, room: &mut SmartRoom) -> io::
             _ => wrong_command(writer)?,
         }
 
-        writeln!(writer, "{}", [
-            "Room management:",
-            "1 - Add an outlet",
-            "2 - Add a thermometer",
-            "3 - Select a device",
-            "4 - Report",
-            "5 - Back",
-        ].join("\n"))?;
+        writeln!(
+            writer,
+            "{}",
+            [
+                "Room management:",
+                "1 - Add an outlet",
+                "2 - Add a thermometer",
+                "3 - Select a device",
+                "4 - Report",
+                "5 - Back",
+            ]
+            .join("\n")
+        )?;
 
         state = match get_input() {
-            Result::Ok(input) => {
-                match input.as_ref() {
-                    "1" => RoomManagement::AddOutlet,
-                    "2" => RoomManagement::AddThermometer,
-                    "3" => RoomManagement::DeviceManagement,
-                    "4" => RoomManagement::Report,
-                    "5" => RoomManagement::Exit,
-                    _ => RoomManagement::WrongCommand,
-                }
-            }
-            _ => RoomManagement::WrongCommand
+            Result::Ok(input) => match input.as_ref() {
+                "1" => RoomManagement::AddOutlet,
+                "2" => RoomManagement::AddThermometer,
+                "3" => RoomManagement::DeviceManagement,
+                "4" => RoomManagement::Report,
+                "5" => RoomManagement::Exit,
+                _ => RoomManagement::WrongCommand,
+            },
+            _ => RoomManagement::WrongCommand,
         };
     }
 
