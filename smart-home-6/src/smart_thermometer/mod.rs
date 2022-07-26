@@ -1,8 +1,5 @@
-use crate::common::{DeviceInterface, Report, PRINT_OFFSET};
-#[cfg(test)]
-mod smart_thermometer_tests;
-
 use crate::accessors;
+use crate::common::{DeviceInterface, Report, PRINT_OFFSET};
 use std::cell::Cell;
 
 #[derive(Clone)]

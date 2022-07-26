@@ -1,8 +1,8 @@
 use crate::common::{DeviceInterface, Report, SwitchStatusEnum, PRINT_OFFSET};
-use std::net::TcpStream;
-use std::io::{Write, Read};
-use std::sync::{Arc, Mutex};
 use std::cell::Cell;
+use std::io::{Read, Write};
+use std::net::TcpStream;
+use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time;
 
@@ -31,23 +31,23 @@ impl SmartOutlet {
     }
 
     pub fn get_address(&self) -> String {
-       self.0.lock().unwrap().address.clone()
+        self.0.lock().unwrap().address.clone()
     }
 
     pub fn get_power(&self) -> f64 {
-       self.0.lock().unwrap().power.get()
+        self.0.lock().unwrap().power.get()
     }
 
     pub fn set_power(&self, value: f64) {
-       self.0.lock().unwrap().power.set(value);
+        self.0.lock().unwrap().power.set(value);
     }
 
     pub fn get_switch(&self) -> SwitchStatusEnum {
-       self.0.lock().unwrap().switch.get()
+        self.0.lock().unwrap().switch.get()
     }
 
     pub fn set_switch(&self, value: SwitchStatusEnum) {
-       self.0.lock().unwrap().switch.set(value);
+        self.0.lock().unwrap().switch.set(value);
     }
 
     pub fn runner(&self) {
@@ -58,26 +58,31 @@ impl SmartOutlet {
                 TcpStream::connect(inner.address.clone())
             };
             match connection {
-                Ok(mut stream) => {
-                    loop {
-                        let mut buf = [0; 8];
-                        thread::sleep(time::Duration::from_millis(1000));
-                        let inner = inner.lock().unwrap();
+                Ok(mut stream) => loop {
+                    let mut buf = [0; 8];
+                    thread::sleep(time::Duration::from_millis(1000));
+                    let inner = inner.lock().unwrap();
 
-                        let switch = inner.switch.get();
-                        match switch {
-                            SwitchStatusEnum::On => { stream.write(&SWITCH_ON.to_le_bytes()).unwrap(); }
-                            SwitchStatusEnum::Off => { stream.write(&SWITCH_OFF.to_le_bytes()).unwrap(); }
+                    let switch = inner.switch.get();
+                    match switch {
+                        SwitchStatusEnum::On => {
+                            stream.write_all(&SWITCH_ON.to_le_bytes()).unwrap();
                         }
-
-                        stream.write(&GET_POWER.to_le_bytes()).unwrap();
-                        stream.read(&mut buf).unwrap();
-                        let power = f64::from_le_bytes(buf);
-                        inner.power.set(power);
+                        SwitchStatusEnum::Off => {
+                            stream.write_all(&SWITCH_OFF.to_le_bytes()).unwrap();
+                        }
                     }
-                }
+
+                    stream.write_all(&GET_POWER.to_le_bytes()).unwrap();
+                    stream.read_exact(&mut buf).unwrap();
+                    let power = f64::from_le_bytes(buf);
+                    inner.power.set(power);
+                },
                 Err(_) => {
-                    eprintln!("Can't update an outlet data ({})", inner.lock().unwrap().name);
+                    eprintln!(
+                        "Can't update an outlet data ({})",
+                        inner.lock().unwrap().name
+                    );
                 }
             };
         });
@@ -86,7 +91,7 @@ impl SmartOutlet {
 
 impl DeviceInterface for SmartOutlet {
     fn get_name(&self) -> String {
-       self.0.lock().unwrap().name.clone()
+        self.0.lock().unwrap().name.clone()
     }
 }
 

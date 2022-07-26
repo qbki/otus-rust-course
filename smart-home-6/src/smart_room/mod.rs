@@ -20,8 +20,7 @@ impl SmartRoom {
     }
 
     pub fn add_device(&mut self, device: Device) {
-        self.devices
-            .insert(device.get_name().to_string(), Rc::new(device));
+        self.devices.insert(device.get_name(), Rc::new(device));
     }
 
     pub fn remove_device(&mut self, name: &str) {
@@ -46,7 +45,7 @@ impl Report for SmartRoom {
         result.push(format!("Room: {}", self.get_name()));
 
         let mut devices = self.get_devices();
-        devices.sort_by(|a, b| a.get_name().cmp(&b.get_name()));
+        devices.sort_by_key(|v| v.get_name());
         let devices_report = devices.into_iter().flat_map(|device| device.report());
         for line in devices_report {
             result.push(format!("{}{}", PRINT_OFFSET, line));
