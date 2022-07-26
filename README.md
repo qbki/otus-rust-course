@@ -143,3 +143,7 @@ Outlet: Some
     switch: On
     consumption: 0.0kW
 ```
+
+## [smart-home-6](./smart-home-6/)
+
+Added TCP Mock Server and network interaction.
