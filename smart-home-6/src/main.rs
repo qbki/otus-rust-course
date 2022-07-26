@@ -5,7 +5,7 @@ mod smart_outlet;
 mod smart_room;
 mod smart_thermometer;
 
-use common::Report;
+use common::{Report, UI_UPDATE_TIMEOUT};
 use mocks::make_home;
 use std::thread;
 use std::time::Duration;
@@ -18,6 +18,6 @@ fn main() {
         print!("\x1B[2J"); // clear screen
         print!("\x1B[H"); // move cursor to (0, 0)
         println!("{}", home.report_to_string());
-        thread::sleep(Duration::from_millis(1000));
+        thread::sleep(Duration::from_millis(UI_UPDATE_TIMEOUT));
     }
 }

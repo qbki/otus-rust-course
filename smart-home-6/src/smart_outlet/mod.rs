@@ -1,4 +1,4 @@
-use crate::common::{DeviceInterface, Report, SwitchStatusEnum, PRINT_OFFSET};
+use crate::common::{DeviceInterface, Report, SwitchStatusEnum, POLLING_TIMEOUT, PRINT_OFFSET};
 use std::cell::Cell;
 use std::io::{Read, Write};
 use std::net::TcpStream;
@@ -13,8 +13,7 @@ const GET_POWER: u8 = 3;
 struct SmartOutletData {
     name: String,
     address: String,
-    // Power units (Watt)
-    power: Cell<f64>,
+    power: Cell<f64>, // Power units (Watt)
     switch: Cell<SwitchStatusEnum>,
 }
 
@@ -60,7 +59,7 @@ impl SmartOutlet {
             match connection {
                 Ok(mut stream) => loop {
                     let mut buf = [0; 8];
-                    thread::sleep(time::Duration::from_millis(1000));
+                    thread::sleep(time::Duration::from_millis(POLLING_TIMEOUT));
                     let inner = inner.lock().unwrap();
 
                     let switch = inner.switch.get();
