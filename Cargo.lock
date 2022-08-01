@@ -29,3 +29,7 @@ version = "0.1.0"
 [[package]]
 name = "smart-home-6"
 version = "0.1.0"
+
+[[package]]
+name = "smart-home-7"
+version = "0.1.0"

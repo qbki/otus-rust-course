@@ -1,0 +1,12 @@
+[package]
+name = "smart-home-7"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "smart-home-7"
+path = "src/main.rs"
+
+[[bin]]
+name = "mock-server-7"
+path = "src/mock-server.rs"
