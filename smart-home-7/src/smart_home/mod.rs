@@ -81,12 +81,10 @@ impl SmartHome {
         self.get_rooms()
             .iter()
             .flat_map(|room| room.get_devices())
-            .for_each(|device| {
-                match device {
-                    Device::Outlet(outlet) => outlet.runner(),
-                    Device::Thermometer(thermometer) => thermometer.runner(),
-                    _ => (),
-                }
+            .for_each(|device| match device {
+                Device::Outlet(outlet) => outlet.runner(),
+                Device::Thermometer(thermometer) => thermometer.runner(),
+                _ => (),
             });
     }
 }

@@ -1,7 +1,7 @@
 use crate::common::{DeviceInterface, Report, POLLING_TIMEOUT, PRINT_OFFSET};
+use std::cell::Cell;
 use std::net::UdpSocket;
 use std::sync::{Arc, Mutex};
-use std::cell::Cell;
 use std::thread;
 use std::time;
 
@@ -48,16 +48,15 @@ impl SmartThermometer {
                     thread::sleep(time::Duration::from_millis(POLLING_TIMEOUT));
                     let inner = inner.lock().unwrap();
 
-                    socket.send_to(&GET_TEMPERATURE.to_le_bytes(), inner.address.clone()).unwrap();
+                    socket
+                        .send_to(&GET_TEMPERATURE.to_le_bytes(), inner.address.clone())
+                        .unwrap();
                     socket.recv_from(&mut buf).unwrap();
                     let temperature = f64::from_le_bytes(buf);
                     inner.temperature.set(temperature);
                 },
                 Err(_) => {
-                    eprintln!(
-                        "Can't update temperature ({})",
-                        inner.lock().unwrap().name
-                    );
+                    eprintln!("Can't update temperature ({})", inner.lock().unwrap().name);
                 }
             };
         });
