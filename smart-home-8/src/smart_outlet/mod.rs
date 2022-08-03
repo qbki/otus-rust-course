@@ -1,19 +1,13 @@
+use crate::accessors;
+use crate::common::{DeviceInterface, Report, SwitchStatusEnum, POLLING_TIMEOUT, PRINT_OFFSET};
 use std::cell::Cell;
 use std::sync::Arc;
 use std::thread;
 use std::time;
-use tokio::io::{AsyncWriteExt, AsyncReadExt};
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 use tokio::spawn;
 use tokio::sync::Mutex;
-use crate::accessors;
-use crate::common::{
-    DeviceInterface,
-    POLLING_TIMEOUT,
-    PRINT_OFFSET,
-    Report,
-    SwitchStatusEnum,
-};
 
 const SWITCH_ON: u8 = 1;
 const SWITCH_OFF: u8 = 2;
@@ -47,15 +41,15 @@ impl SmartOutlet {
     pub async fn runner(&self) {
         let stream = TcpStream::connect(self.get_address())
             .await
-            .expect(&format!("Can't update an outlet data ({})", self.get_address()));
+            .unwrap_or_else(|_| panic!("Can't update an outlet data ({})", self.get_address()));
 
-        let stream = &Arc::new(Mutex::new(stream));
-        let power_level = &Arc::new(Mutex::new(0.0 as f64));
+        let stream = Arc::new(Mutex::new(stream));
+        let power_level = Arc::new(Mutex::new(0.0_f64));
 
         loop {
             let switch = self.get_switch();
-            let stream = Arc::clone(stream);
-            let inner_power_level = Arc::clone(power_level);
+            let stream = Arc::clone(&stream);
+            let inner_power_level = Arc::clone(&power_level);
 
             spawn(async move {
                 let mut stream = stream.lock().await;

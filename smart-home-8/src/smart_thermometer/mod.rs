@@ -1,23 +1,19 @@
 use crate::accessors;
+use crate::common::{DeviceInterface, Report, POLLING_TIMEOUT, PRINT_OFFSET};
 use std::cell::Cell;
 use std::sync::Arc;
 use std::thread;
 use std::time;
 use tokio::net::UdpSocket;
 use tokio::sync::Mutex;
-use crate::common::{
-    DeviceInterface,
-    POLLING_TIMEOUT,
-    PRINT_OFFSET,
-    Report,
-};
 
 const GET_TEMPERATURE: u8 = 1;
 
 pub struct SmartThermometer {
     name: String,
     address: String,
-    temperature: Cell<f64>, }
+    temperature: Cell<f64>,
+}
 
 impl SmartThermometer {
     pub fn new(name: &str, address: &str) -> Self {
@@ -36,13 +32,14 @@ impl SmartThermometer {
 
     pub async fn runner(&self) {
         let socket = UdpSocket::bind("0.0.0.0:0")
-            .await.expect(&format!("Can't connect to a thermometer ({})", self.get_name()));
+            .await
+            .unwrap_or_else(|_| panic!("Can't connect to a thermometer ({})", self.get_name()));
         let socket = Arc::new(socket);
 
         loop {
             let address = self.get_address();
             let socket = Arc::clone(&socket);
-            let temperature = Arc::new(Mutex::new(0.0 as f64));
+            let temperature = Arc::new(Mutex::new(0.0_f64));
             let inner_temperature = Arc::clone(&temperature);
 
             tokio::spawn(async move {
@@ -51,13 +48,12 @@ impl SmartThermometer {
                     .send_to(&GET_TEMPERATURE.to_le_bytes(), address)
                     .await
                     .unwrap();
-                socket
-                    .recv_from(&mut buf)
-                    .await
-                    .unwrap();
+                socket.recv_from(&mut buf).await.unwrap();
                 *inner_temperature.lock().await = f64::from_le_bytes(buf);
                 thread::sleep(time::Duration::from_millis(POLLING_TIMEOUT));
-            }).await.unwrap();
+            })
+            .await
+            .unwrap();
 
             self.set_temperature(*temperature.lock().await);
         }

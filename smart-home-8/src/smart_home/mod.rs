@@ -1,18 +1,12 @@
-use futures::future::join_all;
-use std::collections::HashMap;
-use std::ops::Deref;
+use crate::common::{
+    Device, DeviceInterface, DscError, Report, RequestType, SmartHomeErrorEnum, PRINT_OFFSET,
+};
 use crate::smart_outlet::SmartOutlet;
 use crate::smart_room::SmartRoom;
 use crate::smart_thermometer::SmartThermometer;
-use crate::common::{
-    Device,
-    DeviceInterface,
-    DscError,
-    PRINT_OFFSET,
-    Report,
-    RequestType,
-    SmartHomeErrorEnum,
-};
+use futures::future::join_all;
+use std::collections::HashMap;
+use std::ops::Deref;
 
 pub struct SmartHome {
     name: String,
@@ -89,8 +83,12 @@ impl SmartHome {
         let devices = rooms.iter().flat_map(|room| room.get_devices());
         let futures = devices.map(|device| async move {
             match &*device {
-                Device::Outlet(outlet) => { outlet.runner().await; }
-                Device::Thermometer(thermometer) => { thermometer.runner().await; }
+                Device::Outlet(outlet) => {
+                    outlet.runner().await;
+                }
+                Device::Thermometer(thermometer) => {
+                    thermometer.runner().await;
+                }
                 _ => futures::future::ready(()).await,
             };
         });

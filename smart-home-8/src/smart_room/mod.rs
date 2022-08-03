@@ -32,10 +32,7 @@ impl SmartRoom {
     }
 
     pub fn get_devices(&self) -> Vec<Arc<Device>> {
-        self.devices
-            .values()
-            .map(|device| device.clone())
-            .collect()
+        self.devices.values().cloned().collect()
     }
 }
 
