@@ -1,0 +1,15 @@
+[package]
+name = "smart-home-8"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "smart-home-8"
+path = "src/main.rs"
+
+[[bin]]
+name = "mock-server-8"
+path = "src/mock-server.rs"
+
+[dependencies]
+tokio = { version = "1.20.1", features = ["full"] }
