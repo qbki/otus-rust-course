@@ -1,10 +1,10 @@
 use crate::common::{Device, DeviceInterface, Report, PRINT_OFFSET};
 use std::collections::HashMap;
-use std::rc::Rc;
+use std::sync::Arc;
 
 pub struct SmartRoom {
     name: String,
-    devices: HashMap<String, Rc<Device>>,
+    devices: HashMap<String, Arc<Device>>,
 }
 
 impl SmartRoom {
@@ -20,7 +20,7 @@ impl SmartRoom {
     }
 
     pub fn add_device(&mut self, device: Device) {
-        self.devices.insert(device.get_name(), Rc::new(device));
+        self.devices.insert(device.get_name(), Arc::new(device));
     }
 
     pub fn remove_device(&mut self, name: &str) {
@@ -31,10 +31,10 @@ impl SmartRoom {
         self.devices.get(device_name).map(|device| device.as_ref())
     }
 
-    pub fn get_devices(&self) -> Vec<&Device> {
+    pub fn get_devices(&self) -> Vec<Arc<Device>> {
         self.devices
             .values()
-            .map(|device| device.as_ref())
+            .map(|device| device.clone())
             .collect()
     }
 }

@@ -1,14 +1,19 @@
+use crate::accessors;
 use std::cell::Cell;
 use std::sync::Arc;
 use std::thread;
 use std::time;
 use tokio::net::UdpSocket;
 use tokio::sync::Mutex;
-use crate::common::{DeviceInterface, Report, POLLING_TIMEOUT, PRINT_OFFSET};
+use crate::common::{
+    DeviceInterface,
+    POLLING_TIMEOUT,
+    PRINT_OFFSET,
+    Report,
+};
 
 const GET_TEMPERATURE: u8 = 1;
 
-#[derive(Clone)]
 pub struct SmartThermometer {
     name: String,
     address: String,
@@ -27,45 +32,35 @@ impl SmartThermometer {
         self.address.clone()
     }
 
-    pub fn get_temperature(&self) -> f64 {
-        self.temperature.get()
-    }
-
-    pub fn set_temperature(&self, value: f64) {
-        self.temperature.set(value);
-    }
+    accessors!(get_temperature, set_temperature, temperature, f64);
 
     pub async fn runner(&self) {
-        let socket_result = UdpSocket::bind("0.0.0.0:0").await;
-        match socket_result {
-            Ok(socket) => {
-                let socket = &Arc::new(socket);
-                loop {
-                    let address = self.get_address();
-                    let socket = Arc::clone(&socket);
-                    let new_temperature = &Arc::new(Mutex::new(Cell::new(0.0 as f64)));
-                    let cloned_new_temperature = Arc::clone(&new_temperature);
-                    tokio::spawn(async move {
-                        thread::sleep(time::Duration::from_millis(POLLING_TIMEOUT));
-                        let mut buf = [0; 8];
-                        socket
-                            .send_to(&GET_TEMPERATURE.to_le_bytes(), address)
-                            .await
-                            .unwrap();
-                        socket
-                            .recv_from(&mut buf)
-                            .await
-                            .unwrap();
-                        let temperature = f64::from_le_bytes(buf);
-                        cloned_new_temperature.lock().await.set(temperature);
-                    }).await.unwrap();
-                    self.set_temperature(new_temperature.lock().await.get());
-                }
-            },
-            Err(_) => {
-                eprintln!("Can't connect to a thermometer ({})", self.get_name());
-            }
-        };
+        let socket = UdpSocket::bind("0.0.0.0:0")
+            .await.expect(&format!("Can't connect to a thermometer ({})", self.get_name()));
+        let socket = Arc::new(socket);
+
+        loop {
+            let address = self.get_address();
+            let socket = Arc::clone(&socket);
+            let temperature = Arc::new(Mutex::new(0.0 as f64));
+            let inner_temperature = Arc::clone(&temperature);
+
+            tokio::spawn(async move {
+                let mut buf = [0; 8];
+                socket
+                    .send_to(&GET_TEMPERATURE.to_le_bytes(), address)
+                    .await
+                    .unwrap();
+                socket
+                    .recv_from(&mut buf)
+                    .await
+                    .unwrap();
+                *inner_temperature.lock().await = f64::from_le_bytes(buf);
+                thread::sleep(time::Duration::from_millis(POLLING_TIMEOUT));
+            }).await.unwrap();
+
+            self.set_temperature(*temperature.lock().await);
+        }
     }
 }
 

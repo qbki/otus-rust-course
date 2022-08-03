@@ -16,7 +16,7 @@ pub fn make_home() -> SmartHome {
 
     let unknown_outlet = SmartOutlet::new(UNKNOWN_OUTLET, "127.0.0.1:20002");
     unknown_outlet.set_power(1000.0);
-    unknown_outlet.set_switch(Off);
+    unknown_outlet.set_switch(On);
 
     let outside_thermometer = SmartThermometer::new("Outside", "127.0.0.1:20101");
     outside_thermometer.set_temperature(30.0);

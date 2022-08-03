@@ -12,4 +12,5 @@ name = "mock-server-8"
 path = "src/mock-server.rs"
 
 [dependencies]
+futures = "0.3"
 tokio = { version = "1.20.1", features = ["full"] }
