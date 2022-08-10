@@ -1,6 +1,7 @@
 [workspace]
 members = [
   "fizzbuzz",
+  "patterns",
   "smart-home-1",
   "smart-home-2",
   "smart-home-3",
