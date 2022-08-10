@@ -2,6 +2,7 @@ mod animated_disc;
 mod common;
 mod disc;
 mod dummy;
+mod dyn_dummy;
 mod plane;
 mod ray;
 mod report;
@@ -11,6 +12,7 @@ use animated_disc::AnimatedDisc;
 use common::{App, Update, HitTest};
 use disc::Disc;
 use dummy::{Object, Dummy};
+use dyn_dummy::DynDummy;
 use nalgebra_glm::vec3;
 use plane::Plane;
 use ray::Ray;
@@ -56,7 +58,11 @@ fn main() {
     };
 
     let mut root = Dummy(vec![
-        Object::AnimatedDisc(AnimatedDisc(Disc { origin: vec3(0.5, 0.0, 0.0), normal: vec3(0.0, 0.0, -1.0), radius: 0.1, symbol: '*' })),
+        Object::DynDummy(
+            DynDummy(
+                vec![Box::new(AnimatedDisc(Disc { origin: vec3(0.5, 0.0, 0.0), normal: vec3(0.0, 0.0, -1.0), radius: 0.1, symbol: '*' }))]
+            )
+        ),
         Object::AnimatedDisc(AnimatedDisc(Disc { origin: vec3(-0.5, 0.0, 0.0), normal: vec3(0.0, 0.0, -1.0), radius: 0.1, symbol: '*' })),
         Object::Disc(Disc { origin: vec3(0.0, 0.0, 0.0), normal: vec3(0.0, 0.0, -1.0), radius: 0.1, symbol: '*' }),
         Object::Plane(Plane { origin: vec3(0.0, 10.0, 0.0), normal: vec3(0.0, -1.0, 0.0), symbol: '.' }),

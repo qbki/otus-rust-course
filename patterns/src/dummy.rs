@@ -1,8 +1,9 @@
-use crate::common::{HitTest, Update};
-use crate::ray::Ray;
-use crate::disc::Disc;
 use crate::animated_disc::AnimatedDisc;
+use crate::common::{HitTest, Update};
+use crate::disc::Disc;
+use crate::dyn_dummy::DynDummy;
 use crate::plane::Plane;
+use crate::ray::Ray;
 use crate::visitor::{VisitorHandler, Visitor};
 
 pub enum Object {
@@ -11,6 +12,7 @@ pub enum Object {
     Plane(Plane),
     #[allow(dead_code)]
     Dummy(Dummy),
+    DynDummy(DynDummy),
 }
 
 pub struct Dummy(pub Vec<Object>);
@@ -23,6 +25,7 @@ impl HitTest for Dummy {
                 Object::AnimatedDisc(disc) => disc.hit(ray),
                 Object::Plane(plane) => plane.hit(ray),
                 Object::Dummy(dummy) => dummy.hit(ray),
+                Object::DynDummy(dummy) => dummy.hit(ray),
             };
             if hit.is_some() {
                 return hit;
@@ -40,6 +43,7 @@ impl Update for Dummy {
                 Object::AnimatedDisc(disc) => disc.update(t),
                 Object::Plane(plane) => plane.update(t),
                 Object::Dummy(dummy) => dummy.update(t),
+                Object::DynDummy(dummy) => dummy.update(t),
             }
         }
     }

@@ -1,8 +1,9 @@
-use crate::visitor::{Visitor, VisitorHandler};
-use crate::dummy::{Dummy, Object};
 use crate::animated_disc::AnimatedDisc;
 use crate::disc::Disc;
+use crate::dummy::{Dummy, Object};
+use crate::dyn_dummy::DynDummy;
 use crate::plane::Plane;
+use crate::visitor::{Visitor, VisitorHandler};
 
 pub struct Report {
     text: String,
@@ -39,7 +40,15 @@ impl Visitor for Report {
                 Object::AnimatedDisc(disc) => disc.accept(self),
                 Object::Plane(plane) => plane.accept(self),
                 Object::Dummy(dummy) => dummy.accept(self),
+                Object::DynDummy(dummy) => dummy.accept(self),
             }
+        }
+    }
+
+    fn visit_dyn_dummy(&mut self, dummy: &DynDummy) {
+        self.text += "DynDummy (no origin)\n";
+        for item in dummy.0.iter() {
+            item.accept(self);
         }
     }
 }

@@ -1,5 +1,6 @@
 use crate::common::{HitTest, Update};
 use crate::ray::Ray;
+use crate::dyn_dummy::DynDummyTrait;
 use crate::visitor::{VisitorHandler, Visitor};
 use crate::disc::Disc;
 
@@ -30,3 +31,4 @@ impl VisitorHandler for AnimatedDisc {
     }
 }
 
+impl DynDummyTrait for AnimatedDisc {}
