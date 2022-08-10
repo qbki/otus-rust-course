@@ -1,4 +1,3 @@
-use std::thread;
 use std::time;
 use nalgebra_glm::{Vec3, vec3};
 
@@ -34,6 +33,7 @@ enum Object {
     Disc(Disc),
     AnimatedDisc(AnimatedDisc),
     Plane(Plane),
+    #[allow(dead_code)]
     Dummy(Dummy),
 }
 
@@ -45,6 +45,17 @@ trait HitTest {
 
 trait Update {
     fn update(&mut self, t: f32);
+}
+
+trait Visitor {
+    fn visit_disc(&mut self, disc: &Disc);
+    fn visit_animated_disc(&mut self, disc: &AnimatedDisc);
+    fn visit_plane(&mut self, plane: &Plane);
+    fn visit_dummy(&mut self, dummy: &Dummy);
+}
+
+trait VisitorHandler {
+    fn accept(&self, visitor: &mut dyn Visitor);
 }
 
 impl Ray {
@@ -174,6 +185,70 @@ impl App {
     }
 }
 
+impl VisitorHandler for Disc {
+    fn accept(&self, visitor: &mut dyn Visitor) {
+        visitor.visit_disc(self);
+    }
+}
+
+impl VisitorHandler for AnimatedDisc {
+    fn accept(&self, visitor: &mut dyn Visitor) {
+        visitor.visit_animated_disc(self);
+    }
+}
+
+impl VisitorHandler for Plane {
+    fn accept(&self, visitor: &mut dyn Visitor) {
+        visitor.visit_plane(self);
+    }
+}
+
+impl VisitorHandler for Dummy {
+    fn accept(&self, visitor: &mut dyn Visitor) {
+        visitor.visit_dummy(self);
+    }
+}
+
+struct Report {
+    text: String,
+}
+
+impl Report {
+    fn new() -> Self {
+        Report { text: String::new() }
+    }
+
+    fn print(&self) {
+        print!("{}", self.text);
+    }
+}
+
+impl Visitor for Report {
+    fn visit_disc(&mut self, disc: &Disc) {
+        self.text += format!("Disc ({}, {}, {})\n", disc.origin.x, disc.origin.y, disc.origin.z).as_str();
+    }
+
+    fn visit_animated_disc(&mut self, disc: &AnimatedDisc) {
+        self.text += format!("Disc ({}, {}, {})\n", disc.0.origin.x, disc.0.origin.y, disc.0.origin.z).as_str();
+    }
+
+    fn visit_plane(&mut self, plane: &Plane) {
+        self.text += format!("Plane ({}, {}, {})\n", plane.origin.x, plane.origin.y, plane.origin.z).as_str();
+    }
+
+    fn visit_dummy(&mut self, dummy: &Dummy) {
+        self.text += "Dummy (no origin)\n";
+        for item in dummy.0.iter() {
+            match item {
+                Object::Disc(disc) => disc.accept(self),
+                Object::AnimatedDisc(disc) => disc.accept(self),
+                Object::Plane(plane) => plane.accept(self),
+                Object::Dummy(dummy) => dummy.accept(self),
+            }
+        }
+    }
+}
+
 fn main() {
     let app = App {
         width: 80,
@@ -193,6 +268,7 @@ fn main() {
 
     loop {
         let now = time::SystemTime::now();
+        let mut report = Report::new();
         let elapsed_result = now.duration_since(last);
         if let Ok(elapsed) = elapsed_result {
             print!("\x1B[2J"); // clear screen
@@ -200,7 +276,8 @@ fn main() {
             app.update(&mut root, elapsed.as_secs_f32());
             app.render(&root);
             last = now;
-            thread::sleep(time::Duration::from_millis(100));
         }
+        report.visit_dummy(&mut root);
+        report.print();
     }
 }
