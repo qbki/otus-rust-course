@@ -11,7 +11,9 @@ pub struct Report {
 
 impl Report {
     pub fn new() -> Self {
-        Report { text: String::new() }
+        Report {
+            text: String::new(),
+        }
     }
 
     pub fn print(&self) {
@@ -21,15 +23,27 @@ impl Report {
 
 impl Visitor for Report {
     fn visit_disc(&mut self, disc: &Disc) {
-        self.text += format!("Disc ({}, {}, {})\n", disc.origin.x, disc.origin.y, disc.origin.z).as_str();
+        self.text += format!(
+            "Disc ({}, {}, {})\n",
+            disc.origin.x, disc.origin.y, disc.origin.z
+        )
+        .as_str();
     }
 
     fn visit_animated_disc(&mut self, disc: &AnimatedDisc) {
-        self.text += format!("Disc ({}, {}, {})\n", disc.0.origin.x, disc.0.origin.y, disc.0.origin.z).as_str();
+        self.text += format!(
+            "Disc ({}, {}, {})\n",
+            disc.0.origin.x, disc.0.origin.y, disc.0.origin.z
+        )
+        .as_str();
     }
 
     fn visit_plane(&mut self, plane: &Plane) {
-        self.text += format!("Plane ({}, {}, {})\n", plane.origin.x, plane.origin.y, plane.origin.z).as_str();
+        self.text += format!(
+            "Plane ({}, {}, {})\n",
+            plane.origin.x, plane.origin.y, plane.origin.z
+        )
+        .as_str();
     }
 
     fn visit_dummy(&mut self, dummy: &Dummy) {
@@ -52,4 +66,3 @@ impl Visitor for Report {
         }
     }
 }
-

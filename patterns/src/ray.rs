@@ -7,6 +7,9 @@ pub struct Ray {
 
 impl Ray {
     pub fn new(origin: &Vec3, normal: &Vec3) -> Ray {
-        Ray { origin: origin.clone(), normal: normal.clone() }
+        Ray {
+            origin: *origin,
+            normal: *normal,
+        }
     }
 }

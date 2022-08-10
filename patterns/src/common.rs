@@ -13,4 +13,3 @@ pub trait HitTest {
 pub trait Update {
     fn update(&mut self, t: f32);
 }
-

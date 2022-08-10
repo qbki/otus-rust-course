@@ -1,8 +1,8 @@
 use crate::common::{HitTest, Update};
-use crate::ray::Ray;
-use crate::dyn_dummy::DynDummyTrait;
-use crate::visitor::{VisitorHandler, Visitor};
 use crate::disc::Disc;
+use crate::dyn_dummy::DynDummyTrait;
+use crate::ray::Ray;
+use crate::visitor::{Visitor, VisitorHandler};
 
 const ROTATION_SPEED: f32 = 0.2;
 

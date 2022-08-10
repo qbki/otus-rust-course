@@ -1,7 +1,7 @@
-use nalgebra_glm::Vec3;
 use crate::common::{HitTest, Update};
 use crate::ray::Ray;
-use crate::visitor::{VisitorHandler, Visitor};
+use crate::visitor::{Visitor, VisitorHandler};
+use nalgebra_glm::Vec3;
 
 pub struct Disc {
     pub origin: Vec3,

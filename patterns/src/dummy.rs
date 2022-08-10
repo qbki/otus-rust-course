@@ -4,7 +4,7 @@ use crate::disc::Disc;
 use crate::dyn_dummy::DynDummy;
 use crate::plane::Plane;
 use crate::ray::Ray;
-use crate::visitor::{VisitorHandler, Visitor};
+use crate::visitor::{Visitor, VisitorHandler};
 
 pub enum Object {
     Disc(Disc),

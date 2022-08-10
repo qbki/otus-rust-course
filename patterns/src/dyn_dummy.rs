@@ -1,6 +1,6 @@
 use crate::common::{HitTest, Update};
 use crate::ray::Ray;
-use crate::visitor::{VisitorHandler, Visitor};
+use crate::visitor::{Visitor, VisitorHandler};
 
 pub trait DynDummyTrait: HitTest + Update + VisitorHandler {}
 

@@ -9,9 +9,9 @@ mod report;
 mod visitor;
 
 use animated_disc::AnimatedDisc;
-use common::{App, Update, HitTest};
+use common::{App, HitTest, Update};
 use disc::Disc;
-use dummy::{Object, Dummy};
+use dummy::{Dummy, Object};
 use dyn_dummy::DynDummy;
 use nalgebra_glm::vec3;
 use plane::Plane;
@@ -58,15 +58,34 @@ fn main() {
     };
 
     let mut root = Dummy(vec![
-        Object::DynDummy(
-            DynDummy(
-                vec![Box::new(AnimatedDisc(Disc { origin: vec3(0.5, 0.0, 0.0), normal: vec3(0.0, 0.0, -1.0), radius: 0.1, symbol: '*' }))]
-            )
-        ),
-        Object::AnimatedDisc(AnimatedDisc(Disc { origin: vec3(-0.5, 0.0, 0.0), normal: vec3(0.0, 0.0, -1.0), radius: 0.1, symbol: '*' })),
-        Object::Disc(Disc { origin: vec3(0.0, 0.0, 0.0), normal: vec3(0.0, 0.0, -1.0), radius: 0.1, symbol: '*' }),
-        Object::Plane(Plane { origin: vec3(0.0, 10.0, 0.0), normal: vec3(0.0, -1.0, 0.0), symbol: '.' }),
-        Object::Plane(Plane { origin: vec3(0.0, -10.0, 0.0), normal: vec3(0.0, 1.0, 0.0), symbol: '~' }),
+        Object::DynDummy(DynDummy(vec![Box::new(AnimatedDisc(Disc {
+            origin: vec3(0.5, 0.0, 0.0),
+            normal: vec3(0.0, 0.0, -1.0),
+            radius: 0.1,
+            symbol: '*',
+        }))])),
+        Object::AnimatedDisc(AnimatedDisc(Disc {
+            origin: vec3(-0.5, 0.0, 0.0),
+            normal: vec3(0.0, 0.0, -1.0),
+            radius: 0.1,
+            symbol: '*',
+        })),
+        Object::Disc(Disc {
+            origin: vec3(0.0, 0.0, 0.0),
+            normal: vec3(0.0, 0.0, -1.0),
+            radius: 0.1,
+            symbol: '*',
+        }),
+        Object::Plane(Plane {
+            origin: vec3(0.0, 10.0, 0.0),
+            normal: vec3(0.0, -1.0, 0.0),
+            symbol: '.',
+        }),
+        Object::Plane(Plane {
+            origin: vec3(0.0, -10.0, 0.0),
+            normal: vec3(0.0, 1.0, 0.0),
+            symbol: '~',
+        }),
     ]);
 
     let mut last = time::SystemTime::now();
@@ -83,7 +102,7 @@ fn main() {
         }
 
         let mut report = Report::new();
-        report.visit_dummy(&mut root);
+        report.visit_dummy(&root);
         report.print();
     }
 }
