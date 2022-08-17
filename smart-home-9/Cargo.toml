@@ -1,0 +1,13 @@
+[package]
+name = "smart-home-9"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "smart-home-9"
+path = "src/main.rs"
+
+[dependencies]
+futures = "0.3"
+thiserror = "1.0.32"
+tokio = { version = "1.20.1", features = ["full"] }
