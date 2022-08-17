@@ -1,10 +1,5 @@
 use crate::common::{
-    Device,
-    DeviceInterface,
-    PRINT_OFFSET,
-    Report,
-    RequestType,
-    SmartHomeErrorEnum,
+    Device, DeviceInterface, Report, RequestType, SmartHomeErrorEnum, PRINT_OFFSET,
 };
 use crate::smart_outlet::SmartOutlet;
 use crate::smart_room::SmartRoom;
@@ -60,9 +55,7 @@ impl SmartHome {
                 .rooms
                 .get_mut(*room_name)
                 .map(|v| ResponseData::Room(v.as_mut()))
-                .ok_or_else(||
-                    SmartHomeErrorEnum::NotFoundRoomError(room_name.to_string())
-                ),
+                .ok_or_else(|| SmartHomeErrorEnum::NotFoundRoomError(room_name.to_string())),
             RequestType::Device(room_name, device_name) => {
                 let room = self.rooms.get(*room_name);
                 match room {
@@ -131,7 +124,7 @@ impl<'a> From<Response<'a>> for Result<&'a SmartOutlet, SmartHomeErrorEnum> {
         match value {
             Response(Ok(ResponseData::Device(Device::Outlet(payload)))) => Ok(payload),
             _ => Err(SmartHomeErrorEnum::NotFoundDeviceError(
-                "Unknown outlet".to_string()
+                "Unknown outlet".to_string(),
             )),
         }
     }
@@ -156,7 +149,9 @@ impl<'a> From<Response<'a>> for Result<&'a dyn DeviceInterface, SmartHomeErrorEn
                 Device::Thermometer(thermometer) => Ok(thermometer),
                 Device::Generic(generic) => Ok(generic.as_ref()),
             },
-            _ => Err(SmartHomeErrorEnum::NotFoundDeviceError("Unknown".to_string())),
+            _ => Err(SmartHomeErrorEnum::NotFoundDeviceError(
+                "Unknown".to_string(),
+            )),
         }
     }
 }

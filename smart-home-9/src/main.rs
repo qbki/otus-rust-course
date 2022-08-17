@@ -6,8 +6,8 @@ mod smart_room;
 mod smart_thermometer;
 
 use common::RequestType;
-use smart_home::Response;
 use mocks::{make_home, KITCHEN};
+use smart_home::Response;
 
 fn main() {
     let mut home = make_home();
