@@ -1,4 +1,4 @@
-use crate::common::GameState;
+use crate::game_state::GameState;
 use termion::terminal_size;
 
 pub trait Command {

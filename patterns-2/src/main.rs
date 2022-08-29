@@ -3,14 +3,15 @@ extern crate termion;
 mod common;
 mod commands;
 mod point;
+mod game_state;
 
 use std::io::{Write, stdin, stdout, Stdout};
 use termion::event::{Key, Event};
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
 use crate::commands::*;
-use crate::common::*;
 use crate::point::*;
+use crate::game_state::*;
 
 fn draw_frame(state: &GameState, stdout: &mut Stdout) {
     let terminal_size = termion::terminal_size().unwrap();
@@ -31,15 +32,15 @@ fn draw_frame(state: &GameState, stdout: &mut Stdout) {
 
 fn main() {
     let stdin = stdin();
-    let mut commands: Vec<Box<dyn Command>> = vec![];
+    let mut commands: Vec<Box<dyn Command>> = vec![Box::new(NoopCommand())];
     let mut stdout = stdout().into_raw_mode().unwrap();
-    let mut state = GameState {
-        player: Player {
-            pos: Point::new(20, 10),
-            sign: '@',
-        },
-        foot_print: vec![],
-    };
+    let mut state = GameStateBuilder::new()
+        .player_position(20, 10)
+        .player_sign('@')
+        .foot_print(vec![Point::new(20, 10)])
+        .build();
+
+    draw_frame(&state, &mut stdout);
     for event_result in stdin.events() {
         let event = event_result.unwrap();
         let command: Box<dyn Command> = match event {
