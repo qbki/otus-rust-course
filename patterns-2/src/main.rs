@@ -26,6 +26,15 @@ fn draw_frame(state: &GameState, stdout: &mut Stdout) {
         );
     }
     println!(
+        "{}Use ←↑↓→ keys to move around",
+        termion::cursor::Goto(1, 2)
+    );
+    println!(
+        "{}Backspace returns you to the previous position",
+        termion::cursor::Goto(1, 3)
+    );
+    println!("{}Esc - exit the game", termion::cursor::Goto(1, 4));
+    println!(
         "{}{}",
         termion::cursor::Goto(state.player.pos.x as u16, state.player.pos.y as u16),
         state.player.sign

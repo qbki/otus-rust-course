@@ -68,6 +68,23 @@ Plane (0, 10, 0)
 Plane (0, -10, 0)
 ```
 
+## [patterns-2](./patterns-2)
+
+```
+Use ←↑↓→ keys to move around
+Backspace returns you to the previous position
+Esc - exit the game
+
+                   ......
+                   .    .
+                .............
+                .  .    .   .
+              ...................@
+              . .       .   .
+              ...............
+                .........
+```
+
 
 ## [smart-home-1](./smart-home-1)
 
