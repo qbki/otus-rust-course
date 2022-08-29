@@ -58,15 +58,12 @@ impl Command for NoopCommand {
 }
 
 fn move_player_forward(x: i32, y: i32, state: &mut GameState) {
-    let mut pos = state.player.pos.clone();
+    let mut pos = state.player.pos;
     let terminal_size = terminal_size().unwrap();
     pos.x += x;
     pos.y += y;
     let is_moved =
-        pos.x > 0
-        && pos.y > 0
-        && pos.x < terminal_size.0 as i32
-        && pos.y < terminal_size.1 as i32;
+        pos.x > 0 && pos.y > 0 && pos.x < terminal_size.0 as i32 && pos.y < terminal_size.1 as i32;
     if is_moved {
         state.player.pos = pos;
         state.foot_print.push(pos);

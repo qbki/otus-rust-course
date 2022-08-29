@@ -9,4 +9,3 @@ impl Point {
         Point { x, y }
     }
 }
-

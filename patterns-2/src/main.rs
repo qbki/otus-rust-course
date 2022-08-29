@@ -1,32 +1,39 @@
 extern crate termion;
 
-mod common;
 mod commands;
-mod point;
+mod common;
 mod game_state;
+mod point;
 
-use std::io::{Write, stdin, stdout, Stdout};
-use termion::event::{Key, Event};
+use crate::commands::*;
+use crate::game_state::*;
+use crate::point::*;
+use std::io::{stdin, stdout, Stdout, Write};
+use termion::event::{Event, Key};
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
-use crate::commands::*;
-use crate::point::*;
-use crate::game_state::*;
+
+const FOOT_PRINT_SIGN: char = '.';
 
 fn draw_frame(state: &GameState, stdout: &mut Stdout) {
     let terminal_size = termion::terminal_size().unwrap();
     println!("{}", termion::clear::All);
     for item in &state.foot_print {
-        println!("{}{}",
+        println!(
+            "{}{}",
             termion::cursor::Goto(item.x as u16, item.y as u16),
-            '.'
+            FOOT_PRINT_SIGN,
         );
     }
-    println!("{}{}",
+    println!(
+        "{}{}",
         termion::cursor::Goto(state.player.pos.x as u16, state.player.pos.y as u16),
         state.player.sign
     );
-    println!("{}", termion::cursor::Goto(terminal_size.0 - 2, terminal_size.1 - 2));
+    println!(
+        "{}",
+        termion::cursor::Goto(terminal_size.0 - 2, terminal_size.1 - 2)
+    );
     stdout.flush().unwrap();
 }
 
@@ -49,12 +56,9 @@ fn main() {
             Event::Key(Key::Left) => Box::new(MoveLeftCommand()),
             Event::Key(Key::Right) => Box::new(MoveRightCommand()),
             Event::Key(Key::Esc) => {
-                println!("{}{}",
-                    termion::clear::All,
-                    termion::cursor::Goto(1, 1),
-                );
+                println!("{}{}", termion::clear::All, termion::cursor::Goto(1, 1));
                 return;
-            } 
+            }
             Event::Key(Key::Backspace) => {
                 if let Some(rollback_command) = commands.pop() {
                     rollback_command.rollback(&mut state);

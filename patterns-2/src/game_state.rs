@@ -18,7 +18,7 @@ impl GameStateBuilder {
                 pos: Point::new(0, 0),
                 sign: '?',
             },
-            foot_print: vec![]
+            foot_print: vec![],
         }
     }
 
@@ -41,7 +41,7 @@ impl GameStateBuilder {
     pub fn build(&self) -> GameState {
         GameState {
             player: self.player,
-            foot_print: self.foot_print.clone()
+            foot_print: self.foot_print.clone(),
         }
     }
 }
