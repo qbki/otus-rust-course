@@ -210,3 +210,50 @@ Outlet: Some
 ## [smart-home-6](./smart-home-6/)
 
 Added TCP Mock Server and network interaction.
+
+## [smart-home-10](./smart-home-10/)
+
+Added support for HTTP server.
+
+Potential output:
+
+```sh
+$ sh ./smart-home-10/client.sh 
+Initial state:
+Home: Home, sweet home
+
+Added a new room:
+Home: Home, sweet home
+    Room: Some New Room
+
+Added a new thermometer and outlet:
+Home: Home, sweet home
+    Room: Some New Room
+        Outlet: Some New Outlet
+            switch: Off
+            consumption: 0.0kW
+        Thermometer: Some New Thermometer
+            temperature: 0.0°C
+
+Shown a room:
+Room: Some New Room
+    Outlet: Some New Outlet
+        switch: Off
+        consumption: 0.0kW
+    Thermometer: Some New Thermometer
+        temperature: 0.0°C
+
+Shown a device:
+Outlet: Some New Outlet
+    switch: Off
+    consumption: 0.0kW
+
+Removed a device:
+Home: Home, sweet home
+    Room: Some New Room
+        Thermometer: Some New Thermometer
+            temperature: 0.0°C
+
+Removed a room:
+Home: Home, sweet home
+```
