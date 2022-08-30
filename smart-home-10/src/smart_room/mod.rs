@@ -28,7 +28,7 @@ impl SmartRoom {
     }
 
     pub fn get_device(&self, device_name: &str) -> Option<Arc<Device>> {
-        self.devices.get(device_name).map(|device| device.clone())
+        self.devices.get(device_name).cloned()
     }
 
     pub fn get_devices(&self) -> Vec<Arc<Device>> {

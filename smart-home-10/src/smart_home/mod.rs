@@ -29,22 +29,14 @@ impl SmartHome {
     }
 
     pub fn add_room(&mut self, room_name: &str) {
-        self.rooms
-            .insert(room_name.to_string(), Arc::new(Mutex::new(SmartRoom::new(room_name))));
+        self.rooms.insert(
+            room_name.to_string(),
+            Arc::new(Mutex::new(SmartRoom::new(room_name))),
+        );
     }
 
     pub fn remove_room(&mut self, room_name: &str) {
         self.rooms.remove(room_name);
-    }
-
-    pub fn add_device(&mut self, room_name: &str, device: Device) {
-        if !self.rooms.contains_key(room_name) {
-            self.add_room(room_name);
-        }
-
-        if let Some(room) = self.rooms.get_mut(room_name) {
-            room.lock().unwrap().add_device(device);
-        }
     }
 
     pub fn get(&mut self, request_type: &RequestType) -> Response {
@@ -61,7 +53,7 @@ impl SmartHome {
                         .lock()
                         .unwrap()
                         .get_device(device_name)
-                        .map(|v| ResponseData::Device(v))
+                        .map(ResponseData::Device)
                         .ok_or_else(|| {
                             SmartHomeErrorEnum::NotFoundDeviceError(device_name.to_string())
                         }),
@@ -71,10 +63,6 @@ impl SmartHome {
         };
         Response(result)
     }
-
-    pub fn get_rooms(&self) -> Vec<Arc<Mutex<SmartRoom>>> {
-        self.rooms.values().map(|v| Arc::clone(v)).collect()
-    }
 }
 
 impl Report for SmartHome {
@@ -83,8 +71,15 @@ impl Report for SmartHome {
         result.push(format!("Home: {}", self.name));
 
         let mut rooms = Vec::from_iter(self.rooms.values());
-        rooms.sort_by(|a, b| a.lock().unwrap().get_name().cmp(b.lock().unwrap().get_name()));
-        let rooms_report = rooms.into_iter().flat_map(|room| room.lock().unwrap().report());
+        rooms.sort_by(|a, b| {
+            a.lock()
+                .unwrap()
+                .get_name()
+                .cmp(b.lock().unwrap().get_name())
+        });
+        let rooms_report = rooms
+            .into_iter()
+            .flat_map(|room| room.lock().unwrap().report());
         for line in rooms_report {
             result.push(format!("{}{}", PRINT_OFFSET, line));
         }
@@ -96,7 +91,7 @@ impl Report for SmartHome {
 impl From<Response> for Result<Arc<Mutex<SmartRoom>>, SmartHomeErrorEnum> {
     fn from(value: Response) -> Self {
         match value {
-            Response(Ok(ResponseData::Room(payload))) => Ok(payload.clone()),
+            Response(Ok(ResponseData::Room(payload))) => Ok(payload),
             _ => Err(SmartHomeErrorEnum::NotFoundRoomError("Unknown".to_string())),
         }
     }
@@ -105,15 +100,15 @@ impl From<Response> for Result<Arc<Mutex<SmartRoom>>, SmartHomeErrorEnum> {
 impl From<Response> for Result<Arc<SmartOutlet>, SmartHomeErrorEnum> {
     fn from(value: Response) -> Self {
         let make_error = || {
-            Err(SmartHomeErrorEnum::NotFoundDeviceError("Unknown outlet".to_string()))
+            Err(SmartHomeErrorEnum::NotFoundDeviceError(
+                "Unknown outlet".to_string(),
+            ))
         };
         match value {
-            Response(Ok(ResponseData::Device(device_wrapper))) => {
-                match &*device_wrapper {
-                    Device::Outlet(device) => Ok(device.clone()),
-                    _ => make_error(),
-                }
-            }
+            Response(Ok(ResponseData::Device(device_wrapper))) => match &*device_wrapper {
+                Device::Outlet(device) => Ok(device.clone()),
+                _ => make_error(),
+            },
             _ => make_error(),
         }
     }
@@ -122,15 +117,15 @@ impl From<Response> for Result<Arc<SmartOutlet>, SmartHomeErrorEnum> {
 impl From<Response> for Result<Arc<SmartThermometer>, SmartHomeErrorEnum> {
     fn from(value: Response) -> Self {
         let make_error = || {
-            Err(SmartHomeErrorEnum::NotFoundDeviceError("Unknown thermometer".to_string()))
+            Err(SmartHomeErrorEnum::NotFoundDeviceError(
+                "Unknown thermometer".to_string(),
+            ))
         };
         match value {
-            Response(Ok(ResponseData::Device(device_wrapper))) => {
-                match &*device_wrapper {
-                    Device::Thermometer(device) => Ok(device.clone()),
-                    _ => make_error(),
-                }
-            }
+            Response(Ok(ResponseData::Device(device_wrapper))) => match &*device_wrapper {
+                Device::Thermometer(device) => Ok(device.clone()),
+                _ => make_error(),
+            },
             _ => make_error(),
         }
     }

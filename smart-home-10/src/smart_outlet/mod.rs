@@ -1,6 +1,6 @@
 use crate::accessors;
 use crate::common::{DeviceInterface, Report, SwitchStatusEnum, PRINT_OFFSET};
-use std::sync::{Mutex, Arc};
+use std::sync::{Arc, Mutex};
 
 pub struct SmartOutlet {
     name: String,
