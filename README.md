@@ -257,3 +257,9 @@ Home: Home, sweet home
 Removed a room:
 Home: Home, sweet home
 ```
+
+## [smart-home-11](./smart-home-11/)
+
+Implemented GUI (egui).
+
+![Outlet UI](./assets/Screenshot_20220901_171018.png)
