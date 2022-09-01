@@ -45,10 +45,6 @@ impl SmartOutlet {
         self.0.lock().unwrap().power.get()
     }
 
-    pub fn set_power(&self, value: f64) {
-        self.0.lock().unwrap().power.set(value);
-    }
-
     pub fn get_switch(&self) -> SwitchStatusEnum {
         self.0.lock().unwrap().switch.get()
     }
@@ -100,6 +96,7 @@ impl Report for SmartOutlet {
     fn report(&self) -> Vec<String> {
         vec![
             format!("Outlet: {}", self.get_name()),
+            format!("{}Address: {}", PRINT_OFFSET, self.get_address()),
             format!("{}switch: {}", PRINT_OFFSET, self.get_switch()),
             format!(
                 "{}consumption: {:.1}kW",

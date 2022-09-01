@@ -1,8 +1,8 @@
 mod common;
 mod smart_outlet;
 
+use common::{Report, SwitchStatusEnum};
 use smart_outlet::SmartOutlet;
-use common::{SwitchStatusEnum, Report};
 use std::sync::Arc;
 
 fn main() {
@@ -43,7 +43,7 @@ impl eframe::App for App {
                 let outlet_switch_enum: SwitchStatusEnum = outlet_switch.into();
                 ui.checkbox(&mut outlet_switch, format!(" {}", outlet_switch_enum));
             });
-            ui.label(format!("{}", self.outlet.report_to_string()));
+            ui.label(self.outlet.report_to_string());
 
             if self.outlet.get_name() != outlet_name {
                 self.outlet.set_name(&outlet_name);
