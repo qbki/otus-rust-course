@@ -15,3 +15,14 @@ run_task = { name = ["lint", "check-formatting"] }
 
 [env]
 CARGO_MAKE_EXTEND_WORKSPACE_MAKEFILE = true
+
+[tasks.build-main-12]
+workspace = false
+env = { "CARGO_MAKE_WORKSPACE_INCLUDE_MEMBERS" = ["smart-home-12"] }
+command = "clang++"
+args = ["-o", "./target/smart-home-12", "./smart-home-12/src/main.cpp", "-L./target/debug", "-lsmart_lib_12", "--std=c++11"]
+
+[tasks.run-main-12]
+workspace = false
+env = { "CARGO_MAKE_WORKSPACE_INCLUDE_MEMBERS" = ["smart-home-12"], "LD_LIBRARY_PATH" = "${LD_LIBRARY_PATH}:./target/debug" }
+command = "./target/smart-home-12"
