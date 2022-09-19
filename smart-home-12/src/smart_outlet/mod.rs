@@ -48,6 +48,7 @@ impl Report for SmartOutlet {
                 "{}consumption: {:.1}kW",
                 PRINT_OFFSET,
                 self.get_power() * 0.001
-            ), ]
+            ),
+        ]
     }
 }
