@@ -29,6 +29,11 @@ jobs:
           command: make
           args: checks
 
+      - name: Run Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+
       - name: Run Tests
         uses: actions-rs/cargo@v1
         with:
