@@ -1,5 +1,5 @@
-use std::time::{SystemTime, UNIX_EPOCH, Duration};
 use crate::common::{Report, SwitchStatusEnum, PRINT_OFFSET};
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 #[repr(C)]
 #[derive(Clone)]

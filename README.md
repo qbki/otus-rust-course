@@ -263,3 +263,40 @@ Home: Home, sweet home
 Implemented GUI (egui).
 
 ![Outlet UI](./assets/Screenshot_20220901_171018.png)
+
+ 
+## [smart-home-12](./smart-home-12/)
+
+Output (rust):
+
+```sh
+$ cargo run -p smart-home-12
+*** Properties ***
+Power: 3409
+Switch: false
+*** Report ***
+Outlet report
+    switch: Off
+    consumption: 3.4kW
+*** Modified Report ***
+Outlet report
+    switch: On
+    consumption: 3.4kW
+```
+
+Output (C++):
+
+```sh
+$ cargo make build-main-12 && cargo make run-main-12
+*** Properties ***
+Power: 6849
+Switch: 0
+*** Report ***
+Outlet report
+    switch: Off
+    consumption: 6.9kW
+*** Modified Report ***
+Outlet report
+    switch: On
+    consumption: 6.9kW
+```

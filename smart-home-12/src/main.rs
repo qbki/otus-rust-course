@@ -1,12 +1,12 @@
 mod lib {
     use std::ffi::CString;
 
-    type OutletHandlePtr = *mut libc::c_void; 
+    type OutletHandlePtr = *mut libc::c_void;
 
     pub struct OutletHandle(OutletHandlePtr);
 
     #[link(name = "smart_lib_12")]
-    extern {
+    extern "C" {
         pub fn allocate_outlet(name: *const libc::c_char) -> OutletHandlePtr;
         pub fn terminate_outlet(outlet: *mut OutletHandlePtr);
 

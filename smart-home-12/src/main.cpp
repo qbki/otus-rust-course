@@ -28,7 +28,5 @@ int main() {
     std::cout << "*** Modified Report ***" << std::endl;
     std::cout << report(outlet) << std::endl;
 
-    std::cout << (outlet == NULL) << std::endl;
     terminate_outlet(&outlet);
-    std::cout << (outlet == NULL) << std::endl;
 }

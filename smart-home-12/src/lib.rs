@@ -1,8 +1,8 @@
 mod common;
 mod smart_outlet;
 
+use common::{Report, SwitchStatusEnum};
 use smart_outlet::*;
-use common::{SwitchStatusEnum, Report};
 use std::ffi;
 use std::mem::{forget, transmute};
 
@@ -23,7 +23,6 @@ pub unsafe extern "C" fn terminate_outlet(raw_outlet: *mut OutletHandle) {
     *raw_outlet = std::ptr::null_mut();
     drop(value);
 }
-
 
 #[no_mangle]
 pub extern "C" fn get_power(handle: OutletHandle) -> libc::c_double {
@@ -47,7 +46,11 @@ pub extern "C" fn get_switch(handle: OutletHandle) -> libc::c_int {
 #[no_mangle]
 pub extern "C" fn set_switch(handle: OutletHandle, value: libc::c_int) {
     let mut outlet = to_outlet(handle);
-    let switch = if value == 0 { SwitchStatusEnum::Off } else { SwitchStatusEnum::On };
+    let switch = if value == 0 {
+        SwitchStatusEnum::Off
+    } else {
+        SwitchStatusEnum::On
+    };
     outlet.set_switch(switch);
     forget(outlet);
 }
